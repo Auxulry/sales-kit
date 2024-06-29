@@ -42,26 +42,18 @@ const Row = (props) => {
   const { row, setMessage, setSnackbar, setSeverity } = props;
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [confirmCancelOpen, setConfirmCancelOpen] = React.useState(false);
 
   const { changeStatusCustomer } = useZustandStore().sales;
 
-  const handleSaveContact = () => {
-    if (navigator.contacts) {
-      const contact = navigator.contacts.create();
-      contact.displayName = row.name;
-      contact.nickname = row.name;
-      contact.phoneNumbers = [
-        new ContactField('mobile', row.phone, true)
-      ];
+  const chatToWhatsapp = () => {
+    let firstChar = row?.phone.slice(1);
 
-      contact.save(() => {
-        console.log('Contact saved successfully');
-      }, (error) => {
-        console.error('Error saving contact:', error);
-      });
-    } else {
-      console.warn('navigator.contacts API is not supported');
+    if (firstChar === "+") {
+      firstChar = row?.phone.slice(3);
     }
+
+    window.open(`https://wa.me/${firstChar}`, '_blank')
   };
 
   const handleConfirmOpen = () => {
@@ -72,12 +64,39 @@ const Row = (props) => {
     setConfirmOpen(false);
   };
 
-  const onFollowUp = async () => {
+  const onProccess = async () => {
     handleConfirmClose(); // Close the confirmation dialog
     const payload = {
       id: row?.id,
       data: {
-        status: 1
+        status: 2,
+      }
+    };
+
+    try {
+      await changeStatusCustomer(payload);
+      setMessage("Customer status updated successfully");
+      setSeverity("success");
+      setSnackbar(true);
+    } catch (error) {
+      console.log("Failed to update customer status: ", error)
+    }
+  };
+
+  const handleConfirmCancelOpen = () => {
+    setConfirmCancelOpen(true);
+  };
+
+  const handleConfirmCancelClose = () => {
+    setConfirmCancelOpen(false);
+  };
+
+  const onCancel = async () => {
+    handleConfirmCancelClose();
+    const payload = {
+      id: row?.id,
+      data: {
+        status: 4,
       }
     };
 
@@ -119,10 +138,10 @@ const Row = (props) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-                <Button variant='contained' color='inherit' onClick={handleSaveContact}>Save Contact</Button>
-                <Button variant='contained' color='success' onClick={handleConfirmOpen}>Follow Up</Button>
-                <Button variant='contained' color='primary'>Create Link</Button>
+              <Box component='div' sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1.5 }}>
+                <Button variant='contained' color='inherit' onClick={chatToWhatsapp}>Whatsapp</Button>
+                <Button variant='contained' color='success' onClick={handleConfirmOpen}>Proses</Button>
+                <Button variant='contained' color='error' onClick={handleConfirmCancelOpen}>Gagal</Button>
               </Box>
             </Box>
           </Collapse>
@@ -138,15 +157,37 @@ const Row = (props) => {
         <DialogTitle id="alert-dialog-title">{"Konfirmasi"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Anda yakin untuk follow up {row?.name}?
+            Anda yakin untuk proses evaluasi {row?.name}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleConfirmClose} color="primary">
-            No
+            Tidak
           </Button>
-          <Button onClick={onFollowUp} color="primary" autoFocus>
-            Yes
+          <Button onClick={onProccess} color="primary" autoFocus>
+            Ya
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={confirmCancelOpen}
+        onClose={handleConfirmCancelClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Konfirmasi"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Anda yakin untuk memasukan client {row?.name} ke gagal?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmCancelClose} color="primary">
+            Tidak
+          </Button>
+          <Button onClick={onCancel} color="primary" autoFocus>
+            Ya
           </Button>
         </DialogActions>
       </Dialog>
@@ -154,11 +195,10 @@ const Row = (props) => {
   );
 };
 
-export default function Home() {
+export default function Proposal() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [user, setUser] = useState({});
-  const { profile, isAuthenticated } = useZustandStore().auth;
+  const { isAuthenticated } = useZustandStore().auth;
   const { getCustomers, items } = useZustandStore().sales;
   const [message, setMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -169,34 +209,20 @@ export default function Home() {
   useLayoutEffect(() => {
     if (!isAuthenticated) {
       router.push('/auth/login');
-    } else {
-      setUser(profile);
     }
-  }, [profile, isAuthenticated]);
-
-  const handleCopyToClipboard = () => {
-    if (profile?.domain) {
-      navigator.clipboard.writeText(profile.domain)
-        .then(() => {
-          console.log("Domain copied to clipboard");
-        })
-        .catch((err) => {
-          console.error("Could not copy text: ", err);
-        });
-    }
-  };
+  }, [isAuthenticated]);
 
   const handleSearchChange = (event) => {
     setSearchKeyword(event.target.value);
   };
 
   const handleSearch = () => {
-    getCustomers({ search: searchKeyword }); // Fetch customers with the current search keyword
+    getCustomers({ search: searchKeyword, status: 1 }); // Fetch customers with the current search keyword
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      getCustomers({ search: '' });
+      getCustomers({ search: '', status: 1 });
     }
   }, [isAuthenticated, getCustomers]);
 
@@ -227,29 +253,9 @@ export default function Home() {
         }}
       >
         <Typography variant='h5' gutterBottom sx={{ p: 2 }}>
-          Halo, {user?.name}
+          PROPOSAL APPROACH
         </Typography>
-        <Grid container sx={{ p: 2 }}>
-          <Grid item xs={12}>
-            <Typography variant='h5' gutterBottom>
-              Link untuk disebar
-            </Typography>
-            <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography variant='body1' sx={{ mr: 1 }}>
-                {user?.domain}
-              </Typography>
-              <IconButton onClick={handleCopyToClipboard} aria-label="copy to clipboard">
-                <ContentCopy />
-              </IconButton>
-            </Box>
-          </Grid>
-        </Grid>
         <Grid container sx={{ p: 2, mb: 3 }}>
-          <Grid item xs={12}>
-            <Typography variant='h5' gutterBottom>
-              Form Terisi
-            </Typography>
-          </Grid>
           <Grid item xs={12}>
             <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
               <TextField
@@ -272,7 +278,7 @@ export default function Home() {
                 <TableHead>
                   <TableRow>
                     <TableCell>No</TableCell>
-                    <TableCell>CUSTOMER</TableCell>
+                    <TableCell>CUSTOMER - Discovery & Approach</TableCell>
                     <TableCell />
                   </TableRow>
                 </TableHead>
@@ -303,18 +309,6 @@ export default function Home() {
         </Grid>
         <Footer />
       </Box>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{
-          position: 'fixed',
-          bottom: 70,
-          right: 16,
-          zIndex: 2
-        }}
-      >
-        <Add />
-      </Fab>
     </Container>
   );
 }
