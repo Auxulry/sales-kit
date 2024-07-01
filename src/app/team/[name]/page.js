@@ -149,6 +149,10 @@ const Front = () => {
     }
   };
 
+  const handleAdsClick = (link) => {
+    window.open(link, '_blank')
+  }
+
   const handleCloseSnackbar = () => {
     setOpen(false);
   };
@@ -171,66 +175,45 @@ const Front = () => {
       )}
       {salesFound.isFound && (
         <>
-          <Grid container sx={{ mb: 3 }}>
-            <Grid item xs={12}>
-              <Swiper
-                onSlideChange={() => console.log('slide change')}
-                onSwiper={(swiper) => console.log(swiper)}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false,
-                }}
-                modules={[Autoplay]}
-                loop
-                style={{ paddingTop: isMobile || isTab ? 0 : '3rem' }}
-              >
-                <SwiperSlide>
-                  <div style={{ width: '100%', height: '160px', position: 'relative' }}>
-                    <Image
-                      src="https://placehold.co/600x400/png?text=Banner+1"
-                      alt="Placeholder Image 1"
-                      fill
-                      priority
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div style={{ width: '100%', height: '160px', position: 'relative' }}>
-                    <Image
-                      src="https://placehold.co/600x400/png?text=Banner+2"
-                      alt="Placeholder Image 2"
-                      fill
-                      priority
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div style={{ width: '100%', height: '160px', position: 'relative' }}>
-                    <Image
-                      src="https://placehold.co/600x400/png?text=Banner+3"
-                      alt="Placeholder Image 3"
-                      fill
-                      priority
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div style={{ width: '100%', height: '160px', position: 'relative' }}>
-                    <Image
-                      src="https://placehold.co/600x400/png?text=Banner+4"
-                      alt="Placeholder Image 4"
-                      fill
-                      priority
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                </SwiperSlide>
-              </Swiper>
+          {salesInfo.ads.length > 0 && (
+            <Grid container sx={{ mb: 3 }}>
+              <Grid item xs={12}>
+                <Swiper
+                  onSlideChange={() => console.log('slide change')}
+                  onSwiper={(swiper) => console.log(swiper)}
+                  autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                  }}
+                  modules={[Autoplay]}
+                  loop
+                  style={{ paddingTop: isMobile || isTab ? 0 : '3rem' }}
+                >
+                  {salesInfo.ads.map((item, key) => (
+                    <SwiperSlide key={key}>
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '160px',
+                          position: 'relative',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => handleAdsClick(item?.link)}
+                      >
+                        <Image
+                          src={item?.media}
+                          alt={item?.description}
+                          fill
+                          priority
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
           <Box component='div' sx={{ px: isMobile || isTab ? 3 : 0, mb: 3 }}>
             <Grid container>
               <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>

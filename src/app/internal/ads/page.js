@@ -22,13 +22,13 @@ import {
   DialogContent,
   DialogActions,
   Snackbar,
-  Alert, FormControl, Select, InputLabel, MenuItem,
+  Alert,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MainLayout from "@/components/atomics/internal/MainLayout";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
-import CustomerForm from "@/components/molecules/internal/customer/CustomerForm";
+import AdsForm from "@/components/molecules/internal/ads/AdsForm";
 import {useRouter} from "next/navigation";
 
 function EnhancedTableHead(props) {
@@ -37,11 +37,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Name</TableCell>
-        <TableCell>Whatsapp</TableCell>
-        <TableCell>Email</TableCell>
-        <TableCell>Sales</TableCell>
-        <TableCell>Status</TableCell>
+        <TableCell>Media</TableCell>
+        <TableCell>Description</TableCell>
+        <TableCell>Link</TableCell>
+        <TableCell>Sales Page</TableCell>
         <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
@@ -55,7 +54,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTable() {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
+  const [orderBy, setOrderBy] = useState('salesIds');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openPopup, setOpenPopup] = useState(false);
@@ -66,16 +65,9 @@ function EnhancedTable() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
 
-  const { getContacts, createContact, updateContact, deleteContact, items, totalItems, error, errorMessage } = useZustandStore().contact;
+  const { getAds, createAds, updateAds, deleteAds, items, totalItems, error, errorMessage } = useZustandStore().ads;
+
   const { isAuthenticated } = useZustandStore().auth;
-
-  const [status, setStatus] = React.useState('');
-
-  const handleChange = (event) => {
-    setStatus(event.target.value);
-  };
-
-
   const router = useRouter();
   useLayoutEffect(() => {
     if (!isAuthenticated) {
@@ -84,9 +76,8 @@ function EnhancedTable() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getContacts({ page, itemPerPage: rowsPerPage, status });
-  }, [page, rowsPerPage, status]);
-
+    getAds({ page, itemPerPage: rowsPerPage });
+  }, [page, rowsPerPage]);
 
   useEffect(() => {
     if (error) {
@@ -116,35 +107,52 @@ function EnhancedTable() {
   };
 
   const handleSave = async (formData) => {
-    if (editData === null) {
-      await createContact(formData);
-      setMessage("Contact Successfully Created.");
-      setSeverity("success");
-      setOpenSnackbar(true);
-    } else {
-      const payload = {
-        _method: 'put',
-        ...formData
-      }
+    const data = new FormData();
 
-      await updateContact({ id: editData?.id, data: payload })
-      setMessage("Contact Successfully Updated");
-      setSeverity("success");
+    Object.keys(formData).forEach(key => {
+      if (key === 'media' && typeof formData[key] === 'string') {
+        // Skip adding the media field if it's a string
+        return;
+      }
+      if (Array.isArray(formData[key])) {
+        formData[key].forEach((item, i) => {
+          data.append(`${key}[${i}]`, item);
+        });
+      } else {
+        data.append(key, formData[key]);
+      }
+    });
+
+    try {
+      if (editData === null) {
+        await createAds(data);
+        setMessage("Ad Successfully Created.");
+        setSeverity("success");
+      } else {
+        data.append('_method', 'put');
+        await updateAds({ id: editData?.id, data });
+        setMessage("Ad Successfully Updated");
+        setSeverity("success");
+      }
+      await getAds({ page, itemPerPage: rowsPerPage });
+      handleClosePopup();
+    } catch (error) {
+      setMessage("An error occurred.");
+      setSeverity("error");
+    } finally {
       setOpenSnackbar(true);
     }
-    await getContacts({ page, itemPerPage: rowsPerPage });
-    handleClosePopup();
   };
 
   const handleDelete = async () => {
     if (deleteItemId) {
-      await deleteContact(deleteItemId);
-      setMessage("Contact Member Deleted Successfully");
+      await deleteAds(deleteItemId);
+      setMessage("Ad Deleted Successfully");
       setSeverity("success");
       setOpenSnackbar(true);
       setConfirmDeleteOpen(false);
       setDeleteItemId(null);
-      await getContacts({ page, itemPerPage: rowsPerPage });
+      await getAds({ page, itemPerPage: rowsPerPage });
     }
   };
 
@@ -174,28 +182,7 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <Box component='div' sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 3 }}>
-                <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value={status}
-                    onChange={handleChange}
-                    label="Status"
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={0}>Qualification</MenuItem>
-                    <MenuItem value={1}>Proposal</MenuItem>
-                    <MenuItem value={2}>Evaluasi - Harga & Pricing</MenuItem>
-                    <MenuItem value={3}>Closed Won</MenuItem>
-                    <MenuItem value={4}>Closed Lost</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
               <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
             </Box>
           </Toolbar>
@@ -203,13 +190,14 @@ function EnhancedTable() {
             <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
               <EnhancedTableHead order={order} orderBy={orderBy} />
               <TableBody>
-                {items.map((item, index) => (
+                {items.map((item) => (
                   <TableRow hover tabIndex={-1} key={item.id}>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.sales !== null ? item.sales?.name : '-'}</TableCell>
-                    <TableCell>{item.status}</TableCell>
+                    <TableCell>
+                      {item.media && <img src={item.media} alt="Ad Media" style={{ maxHeight: 50 }} />}
+                    </TableCell>
+                    <TableCell>{item.description}</TableCell>
+                    <TableCell>{item.link}</TableCell>
+                    <TableCell>{item?.users.length > 0 ? item.users?.map(user => user.name).join(', ') : '-'}</TableCell>
                     <TableCell>
                       <IconButton onClick={() => handleOpenPopup(item)}>
                         <EditIcon />
@@ -233,7 +221,7 @@ function EnhancedTable() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <CustomerForm
+        <AdsForm
           open={openPopup}
           handleClose={handleClosePopup}
           handleSave={handleSave}
@@ -248,7 +236,7 @@ function EnhancedTable() {
           <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              Are you sure you want to delete this team member?
+              Are you sure you want to delete this ad?
             </Typography>
           </DialogContent>
           <DialogActions>

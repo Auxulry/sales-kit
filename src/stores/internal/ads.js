@@ -9,15 +9,15 @@ export const initialState = {
   errorMessage: ''
 }
 
-const createContactSlice = (set) => ({
+const createAdsSlice = (set) => ({
   ...initialState,
-  getContacts: async ({ page = 0, itemPerPage = 0, search = '', status = '' }) => {
+  getAds: async ({ page = 0, itemPerPage = 0, search = '' }) => {
     set(produce((state) => {
       state.isLoading = true;
     }));
 
     try {
-      const response = await get(`admin/contacts?page=${page}&itemPerPage=${itemPerPage}&search=${search}&status=${status}`)
+      const response = await get(`admin/ads?page=${page}&itemPerPage=${itemPerPage}&search=${search}`)
 
       const data = response.data;
 
@@ -38,13 +38,17 @@ const createContactSlice = (set) => ({
       throw err
     }
   },
-  createContact: async (payload) => {
+  createAds: async (payload) => {
     set(produce((state) => {
       state.isLoading = true;
     }));
 
     try {
-      await post(`admin/contacts`, payload)
+      await post(`admin/ads`, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
 
       set(produce((state) => {
         state.isLoading = false;
@@ -62,13 +66,13 @@ const createContactSlice = (set) => ({
       throw err
     }
   },
-  updateContact: async ({ id, data }) => {
+  updateAds: async ({ id, data }) => {
     set(produce((state) => {
       state.isLoading = true;
     }));
 
     try {
-      await post(`admin/contacts/${id}`, data)
+      await post(`admin/ads/${id}`, data)
 
       set(produce((state) => {
         state.isLoading = false;
@@ -86,13 +90,13 @@ const createContactSlice = (set) => ({
       throw err
     }
   },
-  deleteContact: async (id) => {
+  deleteAds: async (id) => {
     set(produce((state) => {
       state.isLoading = true;
     }));
 
     try {
-      await del(`admin/contacts/${id}`)
+      await del(`admin/ads/${id}`)
 
       set(produce((state) => {
         state.isLoading = false;
@@ -113,4 +117,4 @@ const createContactSlice = (set) => ({
 })
 
 
-export default createContactSlice;
+export default createAdsSlice;

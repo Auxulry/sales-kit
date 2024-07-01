@@ -7,7 +7,8 @@ export const initialState = {
     username: '',
     name: '',
     phone: '',
-    socialMedia: []
+    socialMedia: [],
+    ads: []
   },
   error: false,
   errorMessage: '',

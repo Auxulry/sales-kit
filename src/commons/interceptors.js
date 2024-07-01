@@ -81,8 +81,8 @@ export const get = (url, params) => {
  * @param {String} url
  * @param {*} body
  */
-export const post = (url, body) => {
-  return service.post(`${url}`, body)
+export const post = (url, body, config) => {
+  return service.post(`${url}`, body, config)
 }
 
 /**

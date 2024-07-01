@@ -6,7 +6,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import {Domain, People as PeopleIcon, Dashboard as DashboardIcon} from "@mui/icons-material";
+import {Domain, People as PeopleIcon, Dashboard as DashboardIcon, AdsClick} from "@mui/icons-material";
 
 export const mainListItems = (
   <React.Fragment>
@@ -28,11 +28,17 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Domain" />
     </ListItemButton>
+    <ListItemButton href='/internal/domain'>
+      <ListItemIcon>
+        <AdsClick />
+      </ListItemIcon>
+      <ListItemText primary="Ads Management" />
+    </ListItemButton>
     <ListItemButton href='/internal/customer'>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customer" />
+      <ListItemText primary="Contact" />
     </ListItemButton>
   </React.Fragment>
 );
