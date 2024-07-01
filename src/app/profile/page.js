@@ -229,7 +229,7 @@ export default function Profile() {
     <Container
       maxWidth={isMobile ? false : 'lg'}
       disableGutters
-      sx={{ position: 'relative', height: '100vh' }}
+      sx={{ position: 'relative', height: 'auto' }}
     >
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

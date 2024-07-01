@@ -1,0 +1,237 @@
+"use client";
+
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import PropTypes from 'prop-types';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Toolbar,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
+  Alert,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MainLayout from "@/components/atomics/internal/MainLayout";
+import { useZustandStore } from "@/provider/ZustandContextProvider";
+import CustomerForm from "@/components/molecules/internal/customer/CustomerForm";
+import DomainForm from "@/components/molecules/internal/domain/DomainForm";
+import {useRouter} from "next/navigation";
+
+function EnhancedTableHead(props) {
+  const { order, orderBy } = props;
+
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell>Username</TableCell>
+        <TableCell>Page Subdomain</TableCell>
+        <TableCell>Domain</TableCell>
+        <TableCell>Actions</TableCell>
+      </TableRow>
+    </TableHead>
+  );
+}
+
+EnhancedTableHead.propTypes = {
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+};
+
+function EnhancedTable() {
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('calories');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [message, setMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [severity, setSeverity] = useState('success');
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(null);
+
+  const { getDomains, createDomain, updateDomain, deleteDomain, items, totalItems, error, errorMessage } = useZustandStore().domain;
+
+  const { isAuthenticated } = useZustandStore().auth;
+  const router = useRouter();
+  useLayoutEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/internal/auth/login');
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    getDomains({ page, itemPerPage: rowsPerPage });
+  }, [page, rowsPerPage]);
+
+
+  useEffect(() => {
+    if (error) {
+      setMessage(errorMessage);
+      setSeverity("error");
+      setOpenSnackbar(true);
+    }
+  }, [error, errorMessage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleOpenPopup = (data = null) => {
+    setEditData(data);
+    setOpenPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setOpenPopup(false);
+    setEditData(null);
+  };
+
+  const handleSave = async (formData) => {
+    if (editData === null) {
+      await createDomain(formData);
+      setMessage("Domain Successfully Created.");
+      setSeverity("success");
+      setOpenSnackbar(true);
+    } else {
+      const payload = {
+        _method: 'put',
+        ...formData
+      }
+
+      await updateDomain({ id: editData?.id, data: payload })
+      setMessage("Domain Successfully Updated");
+      setSeverity("success");
+      setOpenSnackbar(true);
+    }
+    await getDomains({ page, itemPerPage: rowsPerPage });
+    handleClosePopup();
+  };
+
+  const handleDelete = async () => {
+    if (deleteItemId) {
+      await deleteDomain(deleteItemId);
+      setMessage("Team Member Deleted Successfully");
+      setSeverity("success");
+      setOpenSnackbar(true);
+      setConfirmDeleteOpen(false);
+      setDeleteItemId(null);
+      await getDomains({ page, itemPerPage: rowsPerPage });
+    }
+  };
+
+  const openDeleteDialog = (id) => {
+    setDeleteItemId(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setConfirmDeleteOpen(false);
+    setDeleteItemId(null);
+  };
+
+  return (
+    <MainLayout>
+      <Box sx={{ width: '100%' }}>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={openSnackbar}
+          autoHideDuration={5000}
+          onClose={() => setOpenSnackbar(false)}
+        >
+          <Alert onClose={() => setOpenSnackbar(false)} severity={severity} sx={{ width: '100%' }}>
+            {message}
+          </Alert>
+        </Snackbar>
+        <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+          <Toolbar>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
+              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
+              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
+            </Box>
+          </Toolbar>
+          <TableContainer>
+            <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
+              <EnhancedTableHead order={order} orderBy={orderBy} />
+              <TableBody>
+                {items.map((item, index) => (
+                  <TableRow hover tabIndex={-1} key={item.id}>
+                    <TableCell>{item.user?.username}</TableCell>
+                    <TableCell>{item.subdomain}</TableCell>
+                    <TableCell>{item.domain}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpenPopup(item)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => openDeleteDialog(item.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalItems}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <DomainForm
+          open={openPopup}
+          handleClose={handleClosePopup}
+          handleSave={handleSave}
+          initialData={editData}
+        />
+        <Dialog
+          open={confirmDeleteOpen}
+          onClose={closeDeleteDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              Are you sure you want to delete this domain?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeDeleteDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} color="error" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </MainLayout>
+  );
+}
+
+export default EnhancedTable;

@@ -26,14 +26,14 @@ const createSalesSlice = (set) => ({
         state.errorMessage = ''
         state.items = data?.data?.items
       }));
-    } catch (e) {
+    } catch (err) {
       set(produce((state) => {
         state.isLoading = false;
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
-      throw e
+      throw err
     }
   },
   changeStatusCustomer: async ({ id, data }) => {
@@ -52,14 +52,14 @@ const createSalesSlice = (set) => ({
 
       await createSalesSlice(set).getCustomers({ search: '', status: 0 })
 
-    } catch (e) {
+    } catch (err) {
       set(produce((state) => {
         state.isLoading = false;
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
-      throw e
+      throw err
     }
   }
 })
