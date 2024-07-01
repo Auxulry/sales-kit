@@ -1,5 +1,5 @@
 import {produce} from "immer";
-import {del, get, post} from "@/commons/interceptors";
+import {del, get, post, setHeaderSession} from "@/commons/interceptors";
 
 export const initialState = {
   isLoading: false,
@@ -17,7 +17,7 @@ const createTeamSlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/teams?page=${page}&itemPerPage=${itemPerPage}&search=${search}`)
+      const response = await get(`admin/teams?page=${page}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
 
       const data = response.data;
 
@@ -44,7 +44,7 @@ const createTeamSlice = (set) => ({
     }));
 
     try {
-      await post(`admin/teams`, payload)
+      await post(`admin/teams`, payload, setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;
@@ -68,7 +68,7 @@ const createTeamSlice = (set) => ({
     }));
 
     try {
-      await post(`admin/teams/${id}`, data)
+      await post(`admin/teams/${id}`, data, setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;
@@ -92,7 +92,7 @@ const createTeamSlice = (set) => ({
     }));
 
     try {
-      await del(`admin/teams/${id}`)
+      await del(`admin/teams/${id}`,{},  setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;

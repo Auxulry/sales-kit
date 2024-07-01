@@ -45,7 +45,7 @@ export default function Dashboard() {
     getSummary()
   }, []);
 
-  const { isAuthenticated } = useZustandStore().auth;
+  const { isAuthenticated } = useZustandStore().admin;
   const router = useRouter();
   useLayoutEffect(() => {
     if (!isAuthenticated) {

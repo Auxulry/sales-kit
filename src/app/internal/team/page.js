@@ -92,7 +92,7 @@ function EnhancedTable() {
     getTeams({ page, itemPerPage: rowsPerPage });
   }, [page, rowsPerPage]);
 
-  const { isAuthenticated } = useZustandStore().auth;
+  const { isAuthenticated } = useZustandStore().admin;
   const router = useRouter();
   useLayoutEffect(() => {
     if (!isAuthenticated) {

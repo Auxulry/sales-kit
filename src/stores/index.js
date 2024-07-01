@@ -10,6 +10,7 @@ import createContactSlice from "@/stores/internal/contact";
 import createDomainSlice from "@/stores/internal/domain";
 import createAdsSlice from "@/stores/internal/ads";
 import createSummarySlice from "@/stores/internal/summary";
+import createAdminSlice from "@/stores/internal/admin";
 
 const useStore = create(
   devtools(
@@ -22,7 +23,8 @@ const useStore = create(
         contact: lens(createContactSlice),
         domain: lens(createDomainSlice),
         ads: lens(createAdsSlice),
-        summary: lens(createSummarySlice)
+        summary: lens(createSummarySlice),
+        admin: lens(createAdminSlice)
       })
     )
   )

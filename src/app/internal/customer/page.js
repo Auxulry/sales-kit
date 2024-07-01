@@ -67,7 +67,7 @@ function EnhancedTable() {
   const [deleteItemId, setDeleteItemId] = useState(null);
 
   const { getContacts, createContact, updateContact, deleteContact, items, totalItems, error, errorMessage } = useZustandStore().contact;
-  const { isAuthenticated } = useZustandStore().auth;
+  const { isAuthenticated } = useZustandStore().admin;
 
   const [status, setStatus] = React.useState('');
 

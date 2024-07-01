@@ -28,7 +28,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Domain" />
     </ListItemButton>
-    <ListItemButton href='/internal/domain'>
+    <ListItemButton href='/internal/ads'>
       <ListItemIcon>
         <AdsClick />
       </ListItemIcon>

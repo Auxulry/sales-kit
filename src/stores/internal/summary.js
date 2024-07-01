@@ -1,5 +1,5 @@
 import {produce} from "immer";
-import {del, get, post} from "@/commons/interceptors";
+import {del, get, post, setHeaderSession} from "@/commons/interceptors";
 
 export const initialState = {
   isLoading: false,
@@ -27,7 +27,7 @@ const createSummarySlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/top-closing?page=${page}&itemPerPage=${itemPerPage}&search=${search}`)
+      const response = await get(`admin/top-closing?page=${page}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
 
       const data = response.data;
 
@@ -54,7 +54,7 @@ const createSummarySlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/summary`)
+      const response = await get(`admin/summary`, {}, setHeaderSession(true))
 
       const data = response.data;
 

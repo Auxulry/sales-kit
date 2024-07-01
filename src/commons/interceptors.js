@@ -25,6 +25,42 @@ export const logResponser = (res) => {
   })
 }
 
+export function setHeaderSession(isAdmin, headers) {
+  if (isAdmin) {
+    const adminSession = getClientSideCookie('_sales_kit_admin_token')
+    if (adminSession !== null) {
+      console.log('not null')
+      return {
+        headers: {
+          Authorization: `Bearer ${getClientSideCookie('_sales_kit_admin_token')}`,
+          ...headers
+        }
+      }
+    } else {
+      return  {
+        headers: {...headers}
+      }
+    }
+  } else {
+    const userSession = getClientSideCookie('_sales_kit_token');
+
+    if (userSession !== null) {
+      return {
+        headers: {
+          Authorization: `Bearer ${getClientSideCookie('_sales_kit_token')}`,
+          ...headers
+        }
+      }
+    } else {
+      return {
+        headers: {
+          ...headers
+        }
+      }
+    }
+  }
+}
+
 /**
  * Axios create default config
  */
@@ -35,14 +71,6 @@ const service = axios.create({
     version: process.env.NEXT_PUBLIC_VERSION || 'v1.0.0'
   }
 })
-
-service.interceptors.request.use(async (request) => {
-  const session = getClientSideCookie('_sales_kit_token');
-  if (session !== null) {
-    request.headers.Authorization = `Bearer ${getClientSideCookie('_sales_kit_token')}`;
-  }
-  return request;
-});
 
 /**
  * Axios interceptors response
@@ -67,10 +95,12 @@ service.interceptors.response.use(function (res) {
  *
  * @param {String} url
  * @param {*} params
+ * @param config
  */
-export const get = (url, params) => {
+export const get = (url, params, config) => {
   return service.get(`${url}`, {
-    params
+    params,
+    ...config
   })
 }
 
@@ -80,6 +110,7 @@ export const get = (url, params) => {
  *
  * @param {String} url
  * @param {*} body
+ * @param config
  */
 export const post = (url, body, config) => {
   return service.post(`${url}`, body, config)
@@ -91,9 +122,10 @@ export const post = (url, body, config) => {
  *
  * @param {String} url
  * @param {*} body
+ * @param config
  */
-export const put = (url, body) => {
-  return service.put(`${url}`, body)
+export const put = (url, body, config) => {
+  return service.put(`${url}`, body, config)
 }
 
 /**
@@ -102,10 +134,12 @@ export const put = (url, body) => {
  *
  * @param {String} url
  * @param {*} params
+ * @param config
  */
-export const del = (url, params) => {
+export const del = (url, params, config) => {
   return service.delete(`${url}`, {
-    params
+    params,
+    ...config
   })
 }
 

@@ -102,10 +102,16 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
       "any.required": "Name is required",
       "string.empty": "Name is required",
     }),
-    username: Joi.string().required().messages({
-      "any.required": "Username is required",
-      "string.empty": "Username is required",
-    }),
+    username: Joi.string()
+      .pattern(/^[a-z0-9._-]+$/)
+      .min(3)
+      .required()
+      .messages({
+        "string.base": "Username should be a type of text",
+        "string.empty": "Username is required",
+        "string.pattern.base": "Username can only contain lowercase letters, numbers, dots, underscores, and hyphens",
+      }),
+
     email: Joi.string().email({ tlds: false }).required().messages({
       "any.required": "Email is required",
       "string.empty": "Email is required",
@@ -133,7 +139,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{initialData ? 'Edit Team Member' : 'Add Team Member'}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>
             <TextField
               label="Name"

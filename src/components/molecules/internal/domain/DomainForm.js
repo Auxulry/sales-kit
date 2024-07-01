@@ -80,7 +80,7 @@ const DomainForm = ({ open, handleClose, handleSave, initialData }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{initialData ? 'Edit Domain' : 'Add Domain'}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>
             <TextField
               label="Domain"

@@ -30,7 +30,7 @@ function Copyright(props) {
 
 export default function SignIn() {
   const router = useRouter();
-  const { postAuthentication, isAuthenticated, error, errorMessage, profile, isLoading } = useZustandStore().auth;
+  const { postAuthentication, isAuthenticated, error, errorMessage, profile, isLoading } = useZustandStore().admin;
   const [formState, setFormState] = useState({
     username: '',
     password: ''
@@ -42,9 +42,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (isAuthenticated && profile?.isAdmin) {
-      setTimeout(() => {
-        router.push('/internal');
-      }, 1000); // Delay the push by 1 second
+      router.push('/internal');
     }
   }, [isAuthenticated, profile]);
 
@@ -57,10 +55,16 @@ export default function SignIn() {
   }, [error, errorMessage]);
 
   const schema = Joi.object({
-    username: Joi.string().min(3).required().messages({
-      "string.base": "Username should be a type of text",
-      "string.empty": "Username is required",
-    }),
+    username: Joi.string()
+      .pattern(/^[a-z0-9._-]+$/)
+      .min(3)
+      .required()
+      .messages({
+        "string.base": "Username should be a type of text",
+        "string.empty": "Username is required",
+        "string.pattern.base": "Username can only contain lowercase letters, numbers, dots, underscores, and hyphens",
+      }),
+
     password: Joi.string().min(6).required().messages({
       "string.base": "Password should be a type of text",
       "string.empty": "Password is required",
@@ -94,9 +98,7 @@ export default function SignIn() {
           setSeverity("success");
           setOpen(true);
 
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000);
+          window.location.reload()
         });
 
       } catch (e) {

@@ -67,7 +67,7 @@ function EnhancedTable() {
 
   const { getDomains, createDomain, updateDomain, deleteDomain, items, totalItems, error, errorMessage } = useZustandStore().domain;
 
-  const { isAuthenticated } = useZustandStore().auth;
+  const { isAuthenticated } = useZustandStore().admin;
   const router = useRouter();
   useLayoutEffect(() => {
     if (!isAuthenticated) {

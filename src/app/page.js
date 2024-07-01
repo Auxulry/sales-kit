@@ -168,6 +168,7 @@ export default function Home() {
   const router = useRouter();
   useLayoutEffect(() => {
     if (!isAuthenticated) {
+      router.refresh()
       router.push('/auth/login');
     } else {
       setUser(profile);

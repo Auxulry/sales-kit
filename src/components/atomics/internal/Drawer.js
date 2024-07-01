@@ -47,10 +47,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function DrawerComponent({ open, toggleDrawer }) {
   const router = useRouter();
-  const { logout } = useZustandStore().auth;
+  const { logout } = useZustandStore().admin;
   const onLogout = async () => {
     await logout().then(() => {
-      router.push('/internal/auth/login')
+      window.location.reload()
     })
   }
 

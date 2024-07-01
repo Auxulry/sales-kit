@@ -1,5 +1,5 @@
 import {produce} from "immer";
-import {del, get, post} from "@/commons/interceptors";
+import {del, get, post, setHeaderSession} from "@/commons/interceptors";
 
 export const initialState = {
   isLoading: false,
@@ -17,7 +17,7 @@ const createContactSlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/contacts?page=${page}&itemPerPage=${itemPerPage}&search=${search}&status=${status}`)
+      const response = await get(`admin/contacts?page=${page}&itemPerPage=${itemPerPage}&search=${search}&status=${status}`, {}, setHeaderSession(true))
 
       const data = response.data;
 
@@ -44,7 +44,7 @@ const createContactSlice = (set) => ({
     }));
 
     try {
-      await post(`admin/contacts`, payload)
+      await post(`admin/contacts`, payload, setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;
@@ -68,7 +68,7 @@ const createContactSlice = (set) => ({
     }));
 
     try {
-      await post(`admin/contacts/${id}`, data)
+      await post(`admin/contacts/${id}`, data, setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;
@@ -92,7 +92,7 @@ const createContactSlice = (set) => ({
     }));
 
     try {
-      await del(`admin/contacts/${id}`)
+      await del(`admin/contacts/${id}`, {}, setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;

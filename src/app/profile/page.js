@@ -221,7 +221,7 @@ export default function Profile() {
 
   const onLogout = async () => {
     await logout().then(() => {
-      router.push('/auth/login')
+      window.location.reload()
     })
   }
 

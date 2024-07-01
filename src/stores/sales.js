@@ -1,5 +1,5 @@
 import {produce} from "immer";
-import {get, post} from "@/commons/interceptors";
+import {get, post, setHeaderSession} from "@/commons/interceptors";
 
 export const initialState = {
   isLoading: false,
@@ -16,7 +16,7 @@ const createSalesSlice = (set) => ({
     }));
 
     try {
-      const response = await get(`sales/customers?page=-1&itemPerPage=&search=${search}&status=${status}`)
+      const response = await get(`sales/customers?page=-1&itemPerPage=&search=${search}&status=${status}`, {}, setHeaderSession(false))
 
       const data = response.data;
 
@@ -42,7 +42,7 @@ const createSalesSlice = (set) => ({
     }));
 
     try {
-      await post(`sales/customers/${id}`, data)
+      await post(`sales/customers/${id}`, data, setHeaderSession(false))
 
       set(produce((state) => {
         state.isLoading = false;
