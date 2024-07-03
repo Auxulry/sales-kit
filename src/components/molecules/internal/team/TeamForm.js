@@ -112,9 +112,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
         "string.pattern.base": "Username can only contain lowercase letters, numbers, dots, underscores, and hyphens",
       }),
 
-    email: Joi.string().email({ tlds: false }).required().messages({
-      "any.required": "Email is required",
-      "string.empty": "Email is required",
+    email: Joi.string().email({ tlds: false }).allow('', null).messages({
       "string.email": "Email must be a valid email",
     }),
     phone: Joi.string().required().messages({
