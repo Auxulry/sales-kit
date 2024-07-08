@@ -26,12 +26,12 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function AppBarComponent({ open, toggleDrawer }) {
+export default function AppBarComponent({ open, toggleDrawer, currentPage = 'Dashboard' }) {
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
         sx={{
-          pr: '24px', // keep right padding when drawer closed
+          pr: '24px',
         }}
       >
         <IconButton
@@ -53,7 +53,7 @@ export default function AppBarComponent({ open, toggleDrawer }) {
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Dashboard
+          { currentPage }
         </Typography>
       </Toolbar>
     </AppBar>

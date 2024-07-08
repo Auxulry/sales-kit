@@ -167,7 +167,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout currentPage='Ads'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

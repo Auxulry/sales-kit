@@ -190,7 +190,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
               value={formState.facebook}
               onChange={handleChange}
               error={Boolean(errors.facebook)}
-              helperText={errors.facebook}
+              helperText={errors.facebook || 'https://www.facebook.com'}
             />
           </Grid>
           <Grid item xs={12}>
@@ -201,7 +201,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
               value={formState.instagram}
               onChange={handleChange}
               error={Boolean(errors.instagram)}
-              helperText={errors.instagram}
+              helperText={errors.instagram || 'https://www.instagram.com'}
             />
           </Grid>
           <Grid item xs={12}>
@@ -212,7 +212,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
               value={formState.twitter}
               onChange={handleChange}
               error={Boolean(errors.twitter)}
-              helperText={errors.twitter}
+              helperText={errors.twitter || 'https://www.twiter.com'}
             />
           </Grid>
           <Grid item xs={12}>
@@ -223,7 +223,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
               value={formState.tiktok}
               onChange={handleChange}
               error={Boolean(errors.tiktok)}
-              helperText={errors.tiktok}
+              helperText={errors.tiktok || 'https://www.tiktok.com'}
             />
           </Grid>
         </Grid>

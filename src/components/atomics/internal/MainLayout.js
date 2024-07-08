@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBarComponent from "@/components/atomics/internal/Appbar";
 import DrawerComponent from "@/components/atomics/internal/Drawer";
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children, currentPage = 'Dashboard' }) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -16,7 +16,7 @@ export default function MainLayout({ children }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBarComponent open={open} toggleDrawer={toggleDrawer} />
+      <AppBarComponent open={open} toggleDrawer={toggleDrawer}  currentPage={currentPage} />
       <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
       <Box
         component="main"

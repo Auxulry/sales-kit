@@ -65,7 +65,7 @@ function EnhancedTable() {
   const [severity, setSeverity] = useState('success');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
-
+  const [search, setSearch] = useState('')
   const { getContacts, createContact, updateContact, deleteContact, items, totalItems, error, errorMessage } = useZustandStore().contact;
   const { isAuthenticated } = useZustandStore().admin;
 
@@ -84,8 +84,8 @@ function EnhancedTable() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getContacts({ page, itemPerPage: rowsPerPage, status });
-  }, [page, rowsPerPage, status]);
+    getContacts({ page, itemPerPage: rowsPerPage, status, search });
+  }, [page, rowsPerPage, status, search]);
 
 
   useEffect(() => {
@@ -159,7 +159,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout currentPage='Customer'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -175,7 +175,7 @@ function EnhancedTable() {
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
               <Box component='div' sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 3 }}>
-                <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
+                <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                   <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
                   <Select

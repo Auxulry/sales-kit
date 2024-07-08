@@ -85,12 +85,14 @@ function EnhancedTable() {
   const [severity, setSeverity] = useState('success');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
+  const [search, setSearch] = useState('');
+
 
   const { getTeams, createTeam, updateTeam, deleteTeam, items, totalItems, error, errorMessage } = useZustandStore().team;
 
   useEffect(() => {
-    getTeams({ page, itemPerPage: rowsPerPage });
-  }, [page, rowsPerPage]);
+    getTeams({ page, itemPerPage: rowsPerPage, search });
+  }, [page, rowsPerPage, search]);
 
   const { isAuthenticated } = useZustandStore().admin;
   const router = useRouter();
@@ -171,7 +173,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout>
+    <MainLayout currentPage='Team'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -186,7 +188,7 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
+              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
               <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
             </Box>
           </Toolbar>
@@ -194,7 +196,7 @@ function EnhancedTable() {
             <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
               <EnhancedTableHead order={order} orderBy={orderBy} />
               <TableBody>
-                {items.map((item, index) => (
+                {items.map((item) => (
                   <TableRow hover tabIndex={-1} key={item.id}>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.username}</TableCell>
