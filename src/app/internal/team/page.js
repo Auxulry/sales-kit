@@ -29,7 +29,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import MainLayout from "@/components/atomics/internal/MainLayout";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
 import TeamForm from "@/components/molecules/internal/team/TeamForm";
-import { FacebookOutlined, Instagram, MusicNote, Twitter } from "@mui/icons-material";
+import {ContentCopy, FacebookOutlined, Instagram, MusicNote, Twitter} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 
 const SocialComponents = ({ type, link }) => {
@@ -172,6 +172,18 @@ function EnhancedTable() {
     setDeleteItemId(null);
   };
 
+  const handleCopyToClipboard = (text) => {
+    if (text !== null) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          console.log("Domain copied to clipboard");
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    }
+  };
+
   return (
     <MainLayout currentPage='Team'>
       <Box sx={{ width: '100%' }}>
@@ -199,9 +211,27 @@ function EnhancedTable() {
                 {items.map((item) => (
                   <TableRow hover tabIndex={-1} key={item.id}>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.username}</TableCell>
+                    <TableCell>
+                      <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body1' sx={{ mr: 1 }}>
+                          {item?.username}
+                        </Typography>
+                        <IconButton onClick={() => handleCopyToClipboard(item?.username)} aria-label="copy to clipboard">
+                          <ContentCopy />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
+                    <TableCell>
+                      <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body1' sx={{ mr: 1 }}>
+                          {item?.phone}
+                        </Typography>
+                        <IconButton onClick={() => handleCopyToClipboard(item?.phone)} aria-label="copy to clipboard">
+                          <ContentCopy />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: .5 }}>
                         { item.socials.filter((row) => row.link !== null).map((row, key) => (

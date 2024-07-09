@@ -7,14 +7,19 @@ import {
   Button,
   TextField,
   Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem, Typography,
+  Typography,
 } from '@mui/material';
 import Joi from 'joi'; // Import Joi for validation
 import Autocomplete from '@mui/material/Autocomplete';
 import { useZustandStore } from "@/provider/ZustandContextProvider";
+
+const statusOptions = [
+  { value: 0, label: 'Qualification' },
+  { value: 1, label: 'Proposal' },
+  { value: 2, label: 'Evaluasi - Harga & Pricing' },
+  { value: 3, label: 'Closed Won' },
+  { value: 4, label: 'Closed Lost' },
+];
 
 const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
   const { items, getTeams } = useZustandStore().team;
@@ -30,8 +35,8 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
   const [errors, setErrors] = useState({}); // State to hold validation errors
 
   useEffect(() => {
-    getTeams({ page: -1});
-  }, [getTeams])
+    getTeams({ page: -1 });
+  }, [getTeams]);
 
   useEffect(() => {
     if (initialData) {
@@ -42,17 +47,13 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
         status: initialData?.statusNumber || 0,
         salesId: initialData?.sales?.id || null,
       });
-
-      console.log(items)
-      console.log(initialData?.sales?.id)
-      console.log(items.find(option => option.id === initialData?.sales?.id))
     } else {
       setFormState({
         name: '',
         email: '',
         phone: '',
         status: '',
-        salesId: null
+        salesId: null,
       });
     }
   }, [initialData]);
@@ -63,7 +64,6 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
   };
 
   const handleSaveClick = () => {
-    console.log(formState.salesId)
     const { error: validationError, value } = schema.validate(formState, { abortEarly: false });
 
     if (validationError) {
@@ -73,7 +73,6 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
       });
       setErrors(validationErrors);
     } else {
-      console.log('here')
       setErrors({});
       handleSave(value); // Call parent component's save function with validated form data
       setFormState({
@@ -149,20 +148,16 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth error={Boolean(errors.status)}>
-              <InputLabel variant="outlined">Status</InputLabel>
-              <Select
-                value={formState.status}
-                onChange={handleChange}
-                name="status"
-              >
-                <MenuItem value={0}>Qualification</MenuItem>
-                <MenuItem value={1}>Proposal</MenuItem>
-                <MenuItem value={2}>Evaluasi - Harga & Pricing</MenuItem>
-                <MenuItem value={3}>Closed Won</MenuItem>
-                <MenuItem value={4}>Closed Lost</MenuItem>
-              </Select>
-            </FormControl>
+            <Autocomplete
+              fullWidth
+              options={statusOptions}
+              getOptionLabel={(option) => option.label}
+              value={statusOptions.find(option => option.value === formState.status) || null}
+              onChange={(event, newValue) => {
+                setFormState({ ...formState, status: newValue ? newValue.value : '' });
+              }}
+              renderInput={(params) => <TextField {...params} label="Status" error={Boolean(errors.status)} />}
+            />
             {errors.status && <Typography color="error">{errors.status}</Typography>}
           </Grid>
           <Grid item xs={12}>

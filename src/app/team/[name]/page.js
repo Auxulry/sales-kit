@@ -9,7 +9,7 @@ import { Autoplay } from "swiper/modules";
 import { FacebookOutlined, Instagram, Twitter, MusicNote } from "@mui/icons-material";
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
-import {useParams} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import Joi from 'joi';
 import AutoPlayAudio from "@/components/atomics/AutoPlayAudio";
 import {Product} from "@/app/team/[name]/dataObj";
@@ -60,6 +60,7 @@ const Front = () => {
   })
   const [selectedProperty, setSelectedProperty] = useState("30/60")
   const [openForm, setOpenForm] = useState(false);
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     setProductType(Product.filter((item) => item.name === product).length > 0
@@ -220,6 +221,9 @@ const Front = () => {
       )}
       {salesFound.isFound && (
         <>
+          {searchParams.size > 0 && (
+            <Typography variant='h4' sx={{ pt: 3 }}>Halo, {searchParams.get('refname')}</Typography>
+          )}
           {salesInfo.ads.length > 0 && (
             <Grid container sx={{ mb: 3 }}>
               <Grid item xs={12}>

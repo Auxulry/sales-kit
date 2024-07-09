@@ -30,6 +30,7 @@ import MainLayout from "@/components/atomics/internal/MainLayout";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
 import CustomerForm from "@/components/molecules/internal/customer/CustomerForm";
 import {useRouter} from "next/navigation";
+import {ContentCopy} from "@mui/icons-material";
 
 function EnhancedTableHead(props) {
   const { order, orderBy } = props;
@@ -158,6 +159,18 @@ function EnhancedTable() {
     setDeleteItemId(null);
   };
 
+  const handleCopyToClipboard = (text) => {
+    if (text !== null) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          console.log("Domain copied to clipboard");
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    }
+  };
+
   return (
     <MainLayout currentPage='Customer'>
       <Box sx={{ width: '100%' }}>
@@ -206,7 +219,16 @@ function EnhancedTable() {
                 {items.map((item, index) => (
                   <TableRow hover tabIndex={-1} key={item.id}>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
+                    <TableCell>
+                      <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body1' sx={{ mr: 1 }}>
+                          {item?.phone}
+                        </Typography>
+                        <IconButton onClick={() => handleCopyToClipboard(item?.phone)} aria-label="copy to clipboard">
+                          <ContentCopy />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>{item.email}</TableCell>
                     <TableCell>{item.sales !== null ? item.sales?.name : '-'}</TableCell>
                     <TableCell>{item.status}</TableCell>
