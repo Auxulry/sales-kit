@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import {get, post, setHeaderSession} from "@/commons/interceptors";
 import {clearCookie, getClientSideCookie, setCookies} from "@/commons/cookies";
+import {handlerHttp} from "@/commons/handler";
 
 const profile = getClientSideCookie('_sales_kit_profile') !== null
   ? JSON.parse(getClientSideCookie('_sales_kit_profile'))
@@ -79,7 +80,9 @@ const createAuthSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
-      return err;
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
+      throw err;
     }
   },
   updateSocialMedia: async (payload) => {
@@ -103,6 +106,9 @@ const createAuthSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
       throw err
     }
   },
@@ -127,6 +133,9 @@ const createAuthSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
       throw err
     }
   },
@@ -151,6 +160,9 @@ const createAuthSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
       throw err
     }
   }

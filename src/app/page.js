@@ -39,31 +39,44 @@ import { useZustandStore } from "@/provider/ZustandContextProvider";
 import { useRouter } from "next/navigation";
 
 const Row = (props) => {
-  const { row, setMessage, setSnackbar, setSeverity } = props;
+  const { row, setMessage, setSnackbar, setSeverity, domain } = props;
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const { changeStatusCustomer } = useZustandStore().sales;
 
   const handleSaveContact = () => {
-    if (navigator.contacts) {
-      const contact = navigator.contacts.create();
-      contact.displayName = row.name;
-      contact.nickname = row.name;
-      contact.phoneNumbers = [
-        new ContactField('mobile', row.phone, true)
-      ];
+    var contact = {
+      name: row.name,
+      phone: row.phone,
+      email: row.email
+    };
+    // create a vcard file
+    var vcard = "BEGIN:VCARD\nVERSION:4.0\nFN:" + contact.name + "\nTEL;TYPE=work,voice:" + contact.phone + "\nEMAIL:" + contact.email + "\nEND:VCARD";
+    var blob = new Blob([vcard], { type: "text/vcard" });
+    var url = URL.createObjectURL(blob);
 
-      contact.save(() => {
-        console.log('Contact saved successfully');
-      }, (error) => {
-        console.error('Error saving contact:', error);
-      });
-    } else {
-      console.warn('navigator.contacts API is not supported');
-    }
+    const newLink = document.createElement('a');
+    newLink.download = contact.name + ".vcf";
+    newLink.textContent = contact.name;
+    newLink.href = url;
+
+    newLink.click();
   };
 
+
+  const handleCopyToClipboard = (name = '') => {
+    if (domain !== null) {
+      const link = name === '' ? domain : `${domain}?refname=${name}`
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          console.log("Domain copied to clipboard");
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    }
+  };
   const handleConfirmOpen = () => {
     setConfirmOpen(true);
   };
@@ -122,7 +135,7 @@ const Row = (props) => {
               <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
                 <Button variant='contained' color='inherit' onClick={handleSaveContact}>Save Contact</Button>
                 <Button variant='contained' color='success' onClick={handleConfirmOpen}>Follow Up</Button>
-                <Button variant='contained' color='primary'>Create Link</Button>
+                <Button variant='contained' color='primary' onClick={() => handleCopyToClipboard(row.name)}>Create Link</Button>
               </Box>
             </Box>
           </Collapse>
@@ -175,9 +188,9 @@ export default function Home() {
     }
   }, [profile, isAuthenticated]);
 
-  const handleCopyToClipboard = () => {
-    if (profile?.domain) {
-      navigator.clipboard.writeText(profile.domain)
+  const handleCopyToClipboard = (domain) => {
+    if (domain !== null) {
+      navigator.clipboard.writeText(domain)
         .then(() => {
           console.log("Domain copied to clipboard");
         })
@@ -235,11 +248,21 @@ export default function Home() {
             <Typography variant='h5' gutterBottom>
               Link untuk disebar
             </Typography>
+            {profile?.domain !== null && (
+              <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant='body1' sx={{ mr: 1 }}>
+                  {user?.domain}
+                </Typography>
+                <IconButton onClick={() => handleCopyToClipboard(profile?.domain)} aria-label="copy to clipboard">
+                  <ContentCopy />
+                </IconButton>
+              </Box>
+            )}
             <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography variant='body1' sx={{ mr: 1 }}>
-                {user?.domain}
+                {user?.subdomain}
               </Typography>
-              <IconButton onClick={handleCopyToClipboard} aria-label="copy to clipboard">
+              <IconButton onClick={() => handleCopyToClipboard(profile?.subdomain)} aria-label="copy to clipboard">
                 <ContentCopy />
               </IconButton>
             </Box>
@@ -293,6 +316,7 @@ export default function Home() {
                         setMessage={setMessage}
                         setSnackbar={setOpenSnackbar}
                         setServerity={setSeverity}
+                        domain={profile?.domain !== null ? profile?.domain : profile?.subdomain}
                       />
                     ))
                   )}

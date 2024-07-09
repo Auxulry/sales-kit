@@ -1,5 +1,6 @@
 import {produce} from "immer";
 import {del, get, post, setHeaderSession} from "@/commons/interceptors";
+import {handlerHttp} from "@/commons/handler";
 
 export const initialState = {
   isLoading: false,
@@ -17,7 +18,7 @@ const createDomainSlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/domains?page=${page}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
+      const response = await get(`admin/domains?page=${page+1}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
 
       const data = response.data;
 
@@ -34,6 +35,8 @@ const createDomainSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, true)
 
       throw err
     }
@@ -59,6 +62,8 @@ const createDomainSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
       throw err
     }
   },
@@ -83,6 +88,8 @@ const createDomainSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
       throw err
     }
   },
@@ -106,6 +113,8 @@ const createDomainSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, true)
 
       throw err
     }

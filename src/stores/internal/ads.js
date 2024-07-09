@@ -1,5 +1,6 @@
 import {produce} from "immer";
 import {del, get, post, setHeaderSession} from "@/commons/interceptors";
+import {handlerHttp} from "@/commons/handler";
 
 export const initialState = {
   isLoading: false,
@@ -17,7 +18,7 @@ const createAdsSlice = (set) => ({
     }));
 
     try {
-      const response = await get(`admin/ads?page=${page}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
+      const response = await get(`admin/ads?page=${page+1}&itemPerPage=${itemPerPage}&search=${search}`, {}, setHeaderSession(true))
 
       const data = response.data;
 
@@ -34,6 +35,8 @@ const createAdsSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, true)
 
       throw err
     }
@@ -61,6 +64,8 @@ const createAdsSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
       throw err
     }
   },
@@ -87,6 +92,8 @@ const createAdsSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
       throw err
     }
   },
@@ -110,6 +117,8 @@ const createAdsSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, true)
 
       throw err
     }

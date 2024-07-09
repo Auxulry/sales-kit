@@ -1,5 +1,6 @@
 import {produce} from "immer";
 import {get, post, setHeaderSession} from "@/commons/interceptors";
+import {handlerHttp} from "@/commons/handler";
 
 export const initialState = {
   isLoading: false,
@@ -33,6 +34,8 @@ const createSalesSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
       throw err
     }
   },
@@ -58,6 +61,8 @@ const createSalesSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, false)
 
       throw err
     }

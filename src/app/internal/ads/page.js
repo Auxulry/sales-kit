@@ -64,7 +64,7 @@ function EnhancedTable() {
   const [severity, setSeverity] = useState('success');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
-
+  const [search, setSearch] = useState('')
   const { getAds, createAds, updateAds, deleteAds, items, totalItems, error, errorMessage } = useZustandStore().ads;
 
   const { isAuthenticated } = useZustandStore().admin;
@@ -76,8 +76,8 @@ function EnhancedTable() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getAds({ page, itemPerPage: rowsPerPage });
-  }, [page, rowsPerPage]);
+    getAds({ page, itemPerPage: rowsPerPage, search });
+  }, [page, rowsPerPage, search]);
 
   useEffect(() => {
     if (error) {
@@ -182,7 +182,7 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} />
+              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
               <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
             </Box>
           </Toolbar>

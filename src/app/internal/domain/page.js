@@ -31,6 +31,7 @@ import { useZustandStore } from "@/provider/ZustandContextProvider";
 import CustomerForm from "@/components/molecules/internal/customer/CustomerForm";
 import DomainForm from "@/components/molecules/internal/domain/DomainForm";
 import {useRouter} from "next/navigation";
+import {ContentCopy} from "@mui/icons-material";
 
 function EnhancedTableHead(props) {
   const { order, orderBy } = props;
@@ -151,6 +152,18 @@ function EnhancedTable() {
     setDeleteItemId(null);
   };
 
+  const handleCopyToClipboard = (domain) => {
+    if (domain !== null) {
+      navigator.clipboard.writeText(domain)
+        .then(() => {
+          console.log("Domain copied to clipboard");
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    }
+  };
+
   return (
     <MainLayout currentPage='Domain'>
       <Box sx={{ width: '100%' }}>
@@ -178,8 +191,26 @@ function EnhancedTable() {
                 {items.map((item, index) => (
                   <TableRow hover tabIndex={-1} key={item.id}>
                     <TableCell>{item.user?.username}</TableCell>
-                    <TableCell>{item.subdomain}</TableCell>
-                    <TableCell>{item.domain}</TableCell>
+                    <TableCell>
+                      <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body1' sx={{ mr: 1 }}>
+                          {item?.subdomain}
+                        </Typography>
+                        <IconButton onClick={() => handleCopyToClipboard(item?.subdomain)} aria-label="copy to clipboard">
+                          <ContentCopy />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box component='div' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant='body1' sx={{ mr: 1 }}>
+                          {item?.domain}
+                        </Typography>
+                        <IconButton onClick={() => handleCopyToClipboard(item?.domain)} aria-label="copy to clipboard">
+                          <ContentCopy />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       <IconButton onClick={() => handleOpenPopup(item)}>
                         <EditIcon />

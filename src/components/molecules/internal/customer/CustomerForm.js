@@ -114,7 +114,7 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{initialData ? 'Edit Customer' : 'Add Customer'}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
+        <Grid container spacing={3} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>
             <TextField
               label="Name"
@@ -150,7 +150,7 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth error={Boolean(errors.status)}>
-              <InputLabel>Status</InputLabel>
+              <InputLabel variant="outlined">Status</InputLabel>
               <Select
                 value={formState.status}
                 onChange={handleChange}

@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import {get, post, setHeaderSession} from "@/commons/interceptors";
 import {clearCookie, getClientSideCookie, setCookies} from "@/commons/cookies";
+import {handlerHttp} from "@/commons/handler";
 
 const profile = getClientSideCookie('_sales_kit_admin_profile') !== null
   ? JSON.parse(getClientSideCookie('_sales_kit_admin_profile'))
@@ -42,7 +43,6 @@ const createAdminSlice = (set) => ({
         state.errorMessage = '';
       }));
       await createAdminSlice(set).fetchMe()
-      console.log('end')
     } catch (err) {
       set(produce((state) => {
         state.isLoading = false;
@@ -56,7 +56,6 @@ const createAdminSlice = (set) => ({
     set(produce((state) => {
       state.isLoading = true;
     }));
-    console.log('here')
     try {
       const response = await get('authentication/me', {}, setHeaderSession(true));
 
@@ -80,7 +79,9 @@ const createAdminSlice = (set) => ({
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
 
-      return err;
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
+      throw err;
     }
   },
   logout: async () => {
@@ -104,6 +105,9 @@ const createAdminSlice = (set) => ({
         state.error = true;
         state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
       }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, true)
+
       throw err
     }
   }

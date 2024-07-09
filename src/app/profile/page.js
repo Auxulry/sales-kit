@@ -85,7 +85,7 @@ export default function Profile() {
         facebook: getUserSocialMediaLink(0),
         instagram: getUserSocialMediaLink(1),
         twitter: getUserSocialMediaLink(2),
-        tiktok: getUserSocialMediaLink(4)
+        tiktok: getUserSocialMediaLink(3)
       });
     }
   }, [isAuthenticated]);
