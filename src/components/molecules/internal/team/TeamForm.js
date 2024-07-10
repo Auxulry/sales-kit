@@ -45,7 +45,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
         facebook: getUserSocialMediaLink(0) || '',
         instagram: getUserSocialMediaLink(1) || '',
         twitter: getUserSocialMediaLink(2) || '',
-        tiktok: getUserSocialMediaLink(4) || '',
+        tiktok: getUserSocialMediaLink(3) || '',
       });
     } else {
       setFormState({
