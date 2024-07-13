@@ -256,8 +256,8 @@ export default function Profile() {
             <Box sx={{ width: '100%' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant='fullWidth' centered>
-                  <Tab label="Profile" {...a11yProps(0)} />
-                  <Tab label="Password" {...a11yProps(1)} />
+                  <Tab label="Profil" {...a11yProps(0)} />
+                  <Tab label="Kata Sandi" {...a11yProps(1)} />
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
@@ -369,7 +369,7 @@ export default function Profile() {
                       fullWidth
                       onClick={onLogout}
                     >
-                      Logout
+                      Keluar
                     </Button>
                   </Grid>
                 </Grid>
@@ -378,7 +378,7 @@ export default function Profile() {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextField
-                      label="New Password"
+                      label="Kata Sandi Baru"
                       type="password"
                       variant="outlined"
                       fullWidth
@@ -391,7 +391,7 @@ export default function Profile() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      label="Confirm Password"
+                      label="Konfirmasi Kata Sandi"
                       type="password"
                       variant="outlined"
                       fullWidth
@@ -419,7 +419,7 @@ export default function Profile() {
                       fullWidth
                       onClick={onLogout}
                     >
-                      Logout
+                      Keluar
                     </Button>
                   </Grid>
                 </Grid>

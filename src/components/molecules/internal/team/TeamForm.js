@@ -135,7 +135,7 @@ const TeamForm = ({ open, handleClose, handleSave, initialData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{initialData ? 'Edit Team Member' : 'Add Team Member'}</DialogTitle>
+      <DialogTitle>{initialData ? 'Ubah Member Tim' : 'Tambah Member Tim'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>

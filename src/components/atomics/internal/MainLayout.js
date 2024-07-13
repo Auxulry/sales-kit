@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBarComponent from "@/components/atomics/internal/Appbar";
 import DrawerComponent from "@/components/atomics/internal/Drawer";
 
-export default function MainLayout({ children, currentPage = 'Dashboard' }) {
+export default function MainLayout({ children, currentPage = 'Beranda' }) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);

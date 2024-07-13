@@ -132,7 +132,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Masuk
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -140,7 +140,7 @@ export default function SignIn() {
             required
             fullWidth
             id="username"
-            label="Username/Phone"
+            label="Nama Pengguna/No. HP"
             name="username"
             autoComplete="username"
             autoFocus
@@ -154,7 +154,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Kata Sandi"
             type="password"
             id="password"
             value={formState.password}
@@ -169,7 +169,7 @@ export default function SignIn() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Masuk
           </Button>
         </Box>
       </Box>

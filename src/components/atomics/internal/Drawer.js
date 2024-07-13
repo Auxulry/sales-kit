@@ -82,7 +82,7 @@ export default function DrawerComponent({ open, toggleDrawer }) {
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Keluar" />
           </ListItem>
         </List>
       </div>

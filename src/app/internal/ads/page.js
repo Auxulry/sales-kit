@@ -38,10 +38,10 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell>Media</TableCell>
-        <TableCell>Description</TableCell>
-        <TableCell>Link</TableCell>
-        <TableCell>Sales Page</TableCell>
-        <TableCell>Actions</TableCell>
+        <TableCell>Deskripsi</TableCell>
+        <TableCell>Tautan</TableCell>
+        <TableCell>Sales</TableCell>
+        <TableCell>Aksi</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -167,7 +167,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout currentPage='Ads'>
+    <MainLayout currentPage='Iklan'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -182,8 +182,8 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
-              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
+              <TextField label="Cari" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Tambah</Button>
             </Box>
           </Toolbar>
           <TableContainer>

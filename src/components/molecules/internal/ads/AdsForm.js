@@ -120,7 +120,7 @@ const AdsForm = ({ open, handleClose, handleSave, initialData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{initialData ? 'Edit Ad' : 'Add Ad'}</DialogTitle>
+      <DialogTitle>{initialData ? 'Ubah Iklan' : 'Tambah Iklan'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>

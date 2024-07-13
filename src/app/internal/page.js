@@ -14,7 +14,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Name</TableCell>
+        <TableCell>Nama</TableCell>
         <TableCell>Total Closing</TableCell>
       </TableRow>
     </TableHead>

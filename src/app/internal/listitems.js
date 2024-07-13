@@ -14,13 +14,13 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText primary="Beranda" />
     </ListItemButton>
     <ListItemButton href='/internal/team'>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Team" />
+      <ListItemText primary="Tim" />
     </ListItemButton>
     <ListItemButton href='/internal/domain'>
       <ListItemIcon>
@@ -32,13 +32,13 @@ export const mainListItems = (
       <ListItemIcon>
         <AdsClick />
       </ListItemIcon>
-      <ListItemText primary="Ads Management" />
+      <ListItemText primary="Manajemen Iklan" />
     </ListItemButton>
     <ListItemButton href='/internal/customer'>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Contact" />
+      <ListItemText primary="Kontak" />
     </ListItemButton>
   </React.Fragment>
 );

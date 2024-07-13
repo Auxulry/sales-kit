@@ -57,12 +57,12 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Name</TableCell>
-        <TableCell>Username</TableCell>
+        <TableCell>Nama</TableCell>
+        <TableCell>Nama Pengguna</TableCell>
         <TableCell>Email</TableCell>
-        <TableCell>Phone</TableCell>
-        <TableCell>Social Media</TableCell>
-        <TableCell>Actions</TableCell>
+        <TableCell>No. HP</TableCell>
+        <TableCell>Media Sosial</TableCell>
+        <TableCell>Aksi</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -185,7 +185,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout currentPage='Team'>
+    <MainLayout currentPage='Tim'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -200,8 +200,8 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
-              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
+              <TextField label="Cari" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Tambah</Button>
             </Box>
           </Toolbar>
           <TableContainer>

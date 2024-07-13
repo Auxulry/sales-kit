@@ -111,7 +111,7 @@ const CustomerForm = ({ open, handleClose, handleSave, initialData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{initialData ? 'Edit Customer' : 'Add Customer'}</DialogTitle>
+      <DialogTitle>{initialData ? 'Ubah Kontak' : 'Tambah Kontak'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>

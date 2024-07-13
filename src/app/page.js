@@ -133,9 +133,9 @@ const Row = (props) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-                <Button variant='contained' color='inherit' onClick={handleSaveContact}>Save Contact</Button>
-                <Button variant='contained' color='success' onClick={handleConfirmOpen}>Follow Up</Button>
-                <Button variant='contained' color='primary' onClick={() => handleCopyToClipboard(row.name)}>Create Link</Button>
+                <Button variant='contained' color='inherit' onClick={handleSaveContact}>Simpan Kontak</Button>
+                <Button variant='contained' color='success' onClick={handleConfirmOpen}>Tindak Lanjud</Button>
+                <Button variant='contained' color='primary' onClick={() => handleCopyToClipboard(row.name)}>Buat Tautan</Button>
               </Box>
             </Box>
           </Collapse>
@@ -151,7 +151,7 @@ const Row = (props) => {
         <DialogTitle id="alert-dialog-title">{"Konfirmasi"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Anda yakin untuk follow up {row?.name}?
+            Anda yakin untuk tindak lanjut {row?.name}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

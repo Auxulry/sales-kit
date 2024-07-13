@@ -354,7 +354,7 @@ const Front = () => {
             {product === 11 && (
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                  <Typography variant='h5' sx={{ mb: 3 }}>Type {selectedProperty}</Typography>
+                  <Typography variant='h5' sx={{ mb: 3 }}>Tipe {selectedProperty}</Typography>
                   <Swiper
                     autoplay={{
                       delay: 2500,
@@ -461,7 +461,7 @@ const Front = () => {
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button variant='outlined' color='inherit' fullWidth onClick={handleRouteChange}>Route ke Lokasi</Button>
+                  <Button variant='outlined' color='inherit' fullWidth onClick={handleRouteChange}>Rute ke Lokasi</Button>
                 </Grid>
               </Grid>
             )}

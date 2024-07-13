@@ -78,7 +78,7 @@ const DomainForm = ({ open, handleClose, handleSave, initialData }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{initialData ? 'Edit Domain' : 'Add Domain'}</DialogTitle>
+      <DialogTitle>{initialData ? 'Ubah Domain' : 'Tambah Domain'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>

@@ -39,10 +39,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Username</TableCell>
-        <TableCell>Page Subdomain</TableCell>
+        <TableCell>Nama Pengguna</TableCell>
+        <TableCell>Subdomain</TableCell>
         <TableCell>Domain</TableCell>
-        <TableCell>Actions</TableCell>
+        <TableCell>Aksi</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -180,8 +180,8 @@ function EnhancedTable() {
         <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
-              <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
-              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
+              <TextField label="Cari" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Tambah</Button>
             </Box>
           </Toolbar>
           <TableContainer>

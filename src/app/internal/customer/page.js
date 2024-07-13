@@ -38,12 +38,12 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Name</TableCell>
+        <TableCell>Nama</TableCell>
         <TableCell>Whatsapp</TableCell>
         <TableCell>Email</TableCell>
         <TableCell>Sales</TableCell>
         <TableCell>Status</TableCell>
-        <TableCell>Actions</TableCell>
+        <TableCell>Aksi</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -172,7 +172,7 @@ function EnhancedTable() {
   };
 
   return (
-    <MainLayout currentPage='Customer'>
+    <MainLayout currentPage='Kontak'>
       <Box sx={{ width: '100%' }}>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -188,7 +188,7 @@ function EnhancedTable() {
           <Toolbar>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
               <Box component='div' sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 3 }}>
-                <TextField label="Search" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
+                <TextField label="Cari" variant="standard" margin={'dense'} sx={{ width: '50%' }} value={search} onChange={(e) => setSearch(e.target.value)} />
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                   <InputLabel id="demo-simple-select-standard-label">Status</InputLabel>
                   <Select
@@ -209,7 +209,7 @@ function EnhancedTable() {
                   </Select>
                 </FormControl>
               </Box>
-              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Add</Button>
+              <Button variant="contained" color="primary" size="small" onClick={() => handleOpenPopup()}>Tambah</Button>
             </Box>
           </Toolbar>
           <TableContainer>
@@ -270,15 +270,15 @@ function EnhancedTable() {
           <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              Are you sure you want to delete this team member?
+              Apakah kamu yakin ingin meghapus member tim ?
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDeleteDialog} color="primary">
-              Cancel
+              Batal
             </Button>
             <Button onClick={handleDelete} color="error" autoFocus>
-              Delete
+              Hapus
             </Button>
           </DialogActions>
         </Dialog>
