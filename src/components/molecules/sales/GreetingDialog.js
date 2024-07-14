@@ -61,8 +61,20 @@ const GreetingDialog = ({ open, handleClose, name }) => {
                 gap: 3
               }}
             >
-              <Typography variant='title'>Halo, {name}</Typography>
-              <Button color='info' variant='contained' onClick={handleClose}>Masuk Website</Button>
+              <Typography>Halo, {name}</Typography>
+              <Box
+                component='div'
+                sx={{
+                  background: 'linear-gradient(to bottom, #147C3B 0%, #66B030 100%)',
+                  color: '#fff',
+                  padding: '1rem',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+                onClick={handleClose}
+              >
+                Lihat Brosur
+              </Box>
             </Box>
           </Grid>
         </Grid>

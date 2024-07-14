@@ -13,6 +13,9 @@ const theme = createTheme({
   typography: {
     fontFamily: poppins.style.fontFamily,
   },
+  box: {
+    fontFamily: poppins.style.fontFamily,
+  }
 });
 
 export default theme;
