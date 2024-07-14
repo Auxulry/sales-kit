@@ -66,7 +66,36 @@ const createSalesSlice = (set) => ({
 
       throw err
     }
+  },
+  addCustomer: async (payload) => {
+    set(produce((state) => {
+      state.isLoading = true;
+    }));
+
+    try {
+      await post(`sales/customers`, payload, setHeaderSession(false))
+
+      set(produce((state) => {
+        state.isLoading = false;
+        state.error = false;
+        state.errorMessage = ''
+      }));
+
+      await createSalesSlice(set).getCustomers({ search: '', status: 0 })
+
+    } catch (err) {
+      set(produce((state) => {
+        state.isLoading = false;
+        state.error = true;
+        state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
+      }));
+
+      handlerHttp(err?.data?.code, err?.data?.message, false)
+
+      throw err
+    }
   }
+
 })
 
 

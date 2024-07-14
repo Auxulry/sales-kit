@@ -37,6 +37,7 @@ import { useTheme } from "@mui/material/styles";
 import Footer from "@/components/atomics/Footer";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
 import { useRouter } from "next/navigation";
+import CustomerForm from "@/components/molecules/sales/CustomerForm";
 
 const Row = (props) => {
   const { row, setMessage, setSnackbar, setSeverity, domain } = props;
@@ -172,11 +173,12 @@ export default function Home() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [user, setUser] = useState({});
   const { profile, isAuthenticated } = useZustandStore().auth;
-  const { getCustomers, items } = useZustandStore().sales;
+  const { getCustomers, items, addCustomer } = useZustandStore().sales;
   const [message, setMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [severity, setSeverity] = useState('success');
   const [searchKeyword, setSearchKeyword] = useState(''); // State for search keyword
+  const [openForm, setOpenForm] = useState(false)
 
   const router = useRouter();
   useLayoutEffect(() => {
@@ -213,6 +215,15 @@ export default function Home() {
       getCustomers({ search: '' });
     }
   }, [isAuthenticated, getCustomers]);
+
+
+  const handleSave = async (formData) => {
+    await addCustomer(formData);
+    setMessage("Contact Successfully Created.");
+    setSeverity("success");
+    setOpenSnackbar(true);
+    setOpenForm(false)
+  }
 
   return (
     <Container
@@ -316,12 +327,11 @@ export default function Home() {
                         setMessage={setMessage}
                         setSnackbar={setOpenSnackbar}
                         setServerity={setSeverity}
-                        domain={profile?.domain !== null ? profile?.domain : profile?.subdomain}
+                        domain={profile?.subdomain}
                       />
                     ))
                   )}
                 </TableBody>
-
               </Table>
             </TableContainer>
           </Grid>
@@ -337,9 +347,15 @@ export default function Home() {
           right: 16,
           zIndex: 2
         }}
+        onClick={() => setOpenForm(true)}
       >
         <Add />
       </Fab>
+      <CustomerForm
+        open={openForm}
+        handleClose={() => setOpenForm(false)}
+        handleSave={handleSave}
+      />
     </Container>
   );
 }

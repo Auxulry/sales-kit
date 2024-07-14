@@ -28,7 +28,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MainLayout from "@/components/atomics/internal/MainLayout";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
-import CustomerForm from "@/components/molecules/internal/customer/CustomerForm";
 import DomainForm from "@/components/molecules/internal/domain/DomainForm";
 import {useRouter} from "next/navigation";
 import {ContentCopy} from "@mui/icons-material";
