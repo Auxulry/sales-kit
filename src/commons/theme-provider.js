@@ -1,9 +1,9 @@
 "use client";
 
-import {Open_Sans} from "next/font/google";
+import {Poppins} from "next/font/google";
 import {createTheme} from "@mui/material";
 
-const openSans = Open_Sans({
+const poppins = Poppins({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -11,7 +11,7 @@ const openSans = Open_Sans({
 
 const theme = createTheme({
   typography: {
-    fontFamily: openSans.style.fontFamily,
+    fontFamily: poppins.style.fontFamily,
   },
 });
 
