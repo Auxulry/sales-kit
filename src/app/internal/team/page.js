@@ -277,15 +277,15 @@ function EnhancedTable() {
           <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              Are you sure you want to delete this team member?
+              Yakin Hapus?
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDeleteDialog} color="primary">
-              Cancel
+              Batal
             </Button>
             <Button onClick={handleDelete} color="error" autoFocus>
-              Delete
+              Hapus
             </Button>
           </DialogActions>
         </Dialog>

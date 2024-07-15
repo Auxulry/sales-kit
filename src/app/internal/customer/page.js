@@ -270,7 +270,7 @@ function EnhancedTable() {
           <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              Apakah kamu yakin ingin meghapus member tim ?
+              Yakin Hapus?
             </Typography>
           </DialogContent>
           <DialogActions>
