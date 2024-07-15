@@ -3,7 +3,7 @@
   "short_name":"Pesona",
   "theme_color":"#00ff00",
   "background_color":"#ffffff",
-  "display":"browser",
+  "display":"standalone",
   "orientation":"any",
   "scope":"/",
   "start_url":"/",
