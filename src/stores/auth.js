@@ -91,7 +91,9 @@ const createAuthSlice = (set) => ({
     }));
 
     try {
-      await post('sales/profile', payload, setHeaderSession(false));
+      await post('sales/profile', payload, setHeaderSession(false, {
+        'Content-Type': 'multipart/form-data'
+      }));
 
       set(produce((state) => {
         state.isLoading = false;

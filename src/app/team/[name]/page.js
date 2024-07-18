@@ -497,15 +497,31 @@ const Front = () => {
                 <Grid item xs={12}>
                   <Box component='div' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                     <Typography variant='h5'>HUBUNGI SALES PERSON KAMI</Typography>
-                    <Box
-                      component='div'
-                      sx={{
-                        borderRadius: '50%',
-                        width: '150px',
-                        height: '150px',
-                        background: '#a4a4a4'
-                      }}
-                    ></Box>
+                    {salesInfo?.photo === null && (
+                      <Box
+                        component='div'
+                        sx={{
+                          borderRadius: '50%',
+                          width: '150px',
+                          height: '150px',
+                          background: '#a4a4a4'
+                        }}
+                      ></Box>
+                    )}
+                    {salesInfo?.photo !== null && (
+                      <Box
+                        component='div'
+                        sx={{
+                          borderRadius: '50%',
+                          width: '150px',
+                          height: '150px',
+                          backgroundImage: `url("${salesInfo?.photo}")`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat"
+                        }}
+                      ></Box>
+                    )}
                     <Typography component='h5'>{salesInfo?.name}</Typography>
                     <Typography variant='subtitle1'>{salesInfo?.phone}</Typography>
                     <Box component='div' sx={{ display: 'flex', gap: 1, mb: 3 }}>

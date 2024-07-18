@@ -7,7 +7,7 @@ import {
   Box,
   Button,
   Container,
-  Grid,
+  Grid, IconButton,
   Snackbar,
   Tab,
   Tabs,
@@ -20,6 +20,7 @@ import Footer from "@/components/atomics/Footer";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
 import { useRouter } from "next/navigation";
 import Joi from 'joi';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -65,8 +66,10 @@ export default function Profile() {
     facebook: '',
     instagram: '',
     twitter: '',
-    tiktok: ''
+    tiktok: '',
+    photo: ''
   });
+  const [preview, setPreview] = useState(null);
   const [passwordFormState, setPasswordFormState] = useState({
     newPassword: '',
     confirmPassword: ''
@@ -87,6 +90,7 @@ export default function Profile() {
         twitter: getUserSocialMediaLink(2),
         tiktok: getUserSocialMediaLink(3)
       });
+      setPreview(profile?.photo)
     }
   }, [isAuthenticated]);
 
@@ -119,6 +123,7 @@ export default function Profile() {
   };
 
   const handleFormSubmit = async (event) => {
+    console.log('here')
     event.preventDefault();
 
     const schema = Joi.object({
@@ -134,6 +139,7 @@ export default function Profile() {
       tiktok: Joi.string().uri().allow('').messages({
         "string.base": "Tiktok should be a type of text",
       }),
+      photo: Joi.any().allow('', null)
     });
 
     const { error: validationError } = schema.validate(formState, { abortEarly: false });
@@ -143,12 +149,13 @@ export default function Profile() {
       validationError.details.forEach(detail => {
         validationErrors[detail.path[0]] = detail.message;
       });
+      console.log(validationErrors)
       setErrors(validationErrors);
     } else {
       setErrors({});
 
       try {
-        const payload = [
+        const socials = [
           {
             socialType: 0,
             link: formState.facebook
@@ -166,7 +173,19 @@ export default function Profile() {
             link: formState.tiktok
           }
         ]
-        await updateSocialMedia({ items: payload });
+
+        const payload = new FormData()
+        for (let i = 0; i < socials.length; i++) {
+          payload.append(`items[${i}][socialType]`, socials[i].socialType);
+          payload.append(`items[${i}][link]`, socials[i].link);
+        }
+
+
+        if (formState.photo != null) {
+          payload.append('photo', formState.photo)
+        }
+
+        await updateSocialMedia(payload);
 
         setMessage("Profile Updated Successfully");
         setSeverity("success");
@@ -225,6 +244,25 @@ export default function Profile() {
     })
   }
 
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFormState((prev) => ({
+        ...prev,
+        photo: file
+      }))
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removePhoto = () => {
+    setFormState((prev) => ({
+      ...prev,
+      photo: null
+    }))
+    setPreview(null);
+  };
+
   return (
     <Container
       maxWidth={isMobile ? false : 'lg'}
@@ -262,7 +300,7 @@ export default function Profile() {
               </Box>
               <CustomTabPanel value={value} index={0}>
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={4} md={3}>
+                  <Grid item xs={12}>
                     <Box
                       component='div'
                       sx={{
@@ -270,11 +308,28 @@ export default function Profile() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 3
+                        gap: 2
                       }}
                     >
-                      <Avatar sx={{ width: 80, height: 80 }} alt={user?.name} />
-                      <Typography variant="h5">{user?.name}</Typography>
+                      <Avatar sx={{ width: 100, height: 100 }} src={preview} alt={user?.name} />
+                      <Typography variant='h5'>{user?.name}</Typography>
+                      <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="photo-upload"
+                        type="file"
+                        onChange={handlePhotoChange}
+                      />
+                      <label htmlFor="photo-upload">
+                        <Button variant="outlined" color="primary" component="span">
+                          Upload
+                        </Button>
+                      </label>
+                      {preview && (
+                        <IconButton onClick={removePhoto} aria-label="delete" size="small">
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
                   </Grid>
                   <Grid item xs={12}>
