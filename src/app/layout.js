@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
     <head>
       <link rel="manifest" href="/manifest.json"/>
     </head>
-    <body suppressHydrationWarning={true} style={{padding: 0, margin: 0 }} className={poppins.className}>
+    <body suppressHydrationWarning={true} style={{padding: 0, margin: 0, position: 'relative' }} className={poppins.className}>
         <AppRouterCacheProvider options={{ key: 'css' }}>
           <ThemeProvider theme={theme}>
             <ZustandProvider>
