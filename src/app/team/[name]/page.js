@@ -17,7 +17,7 @@ import {
 import Image from 'next/image';
 import { useTheme } from '@mui/material/styles';
 import { Autoplay } from "swiper/modules";
-import {FacebookOutlined, Instagram, Twitter, MusicNote, WhatsApp, Add} from "@mui/icons-material";
+import {FacebookOutlined, Instagram, Twitter, MusicNote, WhatsApp, Add, Navigation} from "@mui/icons-material";
 import React, {useEffect, useLayoutEffect, useState} from "react";
 import { useZustandStore } from "@/provider/ZustandContextProvider";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
@@ -57,7 +57,6 @@ const Front = () => {
   });
   const [formState, setFormState] = useState({
     name: '',
-    email: '',
     phone: ''
   });
   const [errors, setErrors] = useState({});
@@ -136,11 +135,6 @@ const Front = () => {
       "string.base": "Name should be a type of text",
       "string.empty": "Name is required",
     }),
-    email: Joi.string().email({ tlds: false }).required().messages({
-      "string.base": "Email should be a type of text",
-      "string.empty": "Email is required",
-      "string.email": "Email must be a valid email address",
-    }),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10,12}$')).required().messages({
       "string.base": "Phone should be a type of text",
       "string.empty": "Phone is required",
@@ -193,7 +187,6 @@ const Front = () => {
       // Clear form state after submission if needed
       setFormState({
         name: '',
-        email: '',
         phone: ''
       });
     } catch (error) {
@@ -374,15 +367,16 @@ const Front = () => {
                           <Box
                             component='div'
                             sx={{
-                              background: item.name === product ? '#A4A4A4' : '#93C490',
+                              background: item.name === product ? '#EFF9E9' : '#E4E7E5',
                               py: .5,
                               px: 1.5,
                               borderRadius: '10px',
                               width: '95%',
                               textAlign: 'center',
                               cursor: 'pointer',
+                              border: item.name === product ? '1px solid #147C3B' : 'none',
                               '&:hover': {
-                                background: '#A4A4A4'
+                                background: '#EFF9E9'
                               }
                             }}
                             onClick={() => setProduct(item.name)}
@@ -416,15 +410,16 @@ const Front = () => {
                             <Box
                               component='div'
                               sx={{
-                                background: item.id === productCategory.type && e.id === productCategory.category ? '#A4A4A4' : '#93C490',
+                                background: item.id === productCategory.type && e.id === productCategory.category ? '#EFF9E9' : '#E4E7E5',
                                 py: .5,
                                 px: 1.5,
                                 borderRadius: '10px',
                                 width: '95%',
                                 textAlign: 'center',
                                 cursor: 'pointer',
+                                border: item.id === productCategory.type && e.id === productCategory.category ? '1px solid #147C3B' : 'none',
                                 '&:hover': {
-                                  background: '#A4A4A4'
+                                  background: '#EFF9E9'
                                 }
                               }}
                               onClick={() => {
@@ -461,6 +456,26 @@ const Front = () => {
                                 priority
                                 style={{ objectFit: 'cover' }}
                               />
+                              <Box
+                                component='div'
+                                sx={{
+                                  borderRadius: '15px',
+                                  background: '#66B030',
+                                  color: '#fff',
+                                  position: 'absolute',
+                                  bottom: '5%',
+                                  right: '3%',
+                                  padding: '.5rem 1rem',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 1.5
+                                }}
+                                onClick={handleRouteChange}
+                              >
+                                <Navigation />
+                                <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
+                              </Box>
                             </div>
                           </SwiperSlide>
                           <SwiperSlide>
@@ -472,6 +487,26 @@ const Front = () => {
                                 priority
                                 style={{ objectFit: 'cover' }}
                               />
+                              <Box
+                                component='div'
+                                sx={{
+                                  borderRadius: '15px',
+                                  background: '#66B030',
+                                  color: '#fff',
+                                  position: 'absolute',
+                                  bottom: '5%',
+                                  right: '3%',
+                                  padding: '.5rem 1rem',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 1.5
+                                }}
+                                onClick={handleRouteChange}
+                              >
+                                <Navigation />
+                                <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
+                              </Box>
                             </div>
                           </SwiperSlide>
                           <SwiperSlide>
@@ -484,6 +519,26 @@ const Front = () => {
                                 style={{ objectFit: 'cover' }}
                               />
                             </div>
+                            <Box
+                              component='div'
+                              sx={{
+                                borderRadius: '15px',
+                                background: '#66B030',
+                                color: '#fff',
+                                position: 'absolute',
+                                bottom: '5%',
+                                right: '3%',
+                                padding: '.5rem 1rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1.5
+                              }}
+                              onClick={handleRouteChange}
+                            >
+                              <Navigation />
+                              <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
+                            </Box>
                           </SwiperSlide>
                         </Swiper>
                       </Grid>
@@ -549,9 +604,6 @@ const Front = () => {
                           </table>
                         </Box>
                       </Grid>
-                      <Grid item xs={12}>
-                        <Button variant='outlined' color='inherit' fullWidth onClick={handleRouteChange}>Rute ke Lokasi</Button>
-                      </Grid>
                     </Grid>
                   )}
                   {product !== 11 && (
@@ -604,7 +656,7 @@ const Front = () => {
                                 borderRadius: '5px',
                                 width: '150px',
                                 height: '150px',
-                                background: '#a4a4a4',
+                                background: '#EFF9E9',
                               }}
                             ></Box>
                           )}
@@ -654,7 +706,7 @@ const Front = () => {
                         </Box>
                         <Typography variant='h6'>Cek juga sosial media kami</Typography>
                         <Box component='div' sx={{display: 'flex', gap: 1, mb: 3}}>
-                          {salesInfo.socialMedia.length > 0 && salesInfo.socialMedia.map((item, key) => (
+                          {salesInfo.socialMedia.length > 0 && salesInfo.socialMedia.filter((e) => e.link !== null).map((item, key) => (
                             <SocialComponents key={key} type={item?.socialType} link={item?.link}/>
                           ))}
                         </Box>
@@ -676,7 +728,7 @@ const Front = () => {
                         <form onSubmit={handleSubmit} style={{
                           display: 'flex',
                           flexDirection: 'column',
-                          margin: '0 auto'
+                          margin: '1rem auto'
                         }}>
                           <Box component='div' sx={{
                             display: 'flex',
@@ -686,7 +738,7 @@ const Front = () => {
                           }}>
                             <TextField
                               label="Nama Lengkap"
-                              variant="standard"
+                              variant="outlined"
                               fullWidth
                               name="name"
                               value={formState.name}
@@ -696,23 +748,24 @@ const Front = () => {
                               InputProps={{
                                 placeholder: 'Nama Lengkap',
                               }}
-                            />
-                            <TextField
-                              label="Alamat Email"
-                              variant="standard"
-                              fullWidth
-                              name="email"
-                              value={formState.email}
-                              onChange={handleChange}
-                              error={Boolean(errors.email)}
-                              helperText={errors.email}
-                              InputProps={{
-                                placeholder: 'Alamat Email',
+                              sx={{
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '& fieldset': {
+                                    borderColor: 'gray', // Customize border color if needed
+                                  },
+                                  '&:hover fieldset': {
+                                    borderColor: 'black', // Customize hover border color if needed
+                                  },
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: 'black', // Customize focused border color if needed
+                                  },
+                                },
                               }}
                             />
                             <TextField
                               label="Nomor Telepon"
-                              variant="standard"
+                              variant="outlined"
                               fullWidth
                               name="phone"
                               value={formState.phone}
@@ -722,8 +775,38 @@ const Front = () => {
                               InputProps={{
                                 placeholder: 'Nomor Telepon',
                               }}
+                              sx={{
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '& fieldset': {
+                                    borderColor: 'gray', // Customize border color if needed
+                                  },
+                                  '&:hover fieldset': {
+                                    borderColor: 'black', // Customize hover border color if needed
+                                  },
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: 'black', // Customize focused border color if needed
+                                  },
+                                },
+                              }}
                             />
-                            <Button variant='outlined' color='inherit' fullWidth type="submit">Kirim</Button>
+                            <Button
+                              variant='outlined'
+                              fullWidth
+                              type="submit"
+                              sx={{
+                                background: '#66B030',
+                                color: '#fff',
+                                borderRadius: '50px',
+                                '&:hover': {
+                                  background: '#5a9929',
+                                  borderColor: '#5a9929',
+                                },
+                                borderColor: '#66B030',
+                              }}
+                            >
+                              Kirim
+                            </Button>
                             <Snackbar
                               anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                               open={open}
@@ -763,7 +846,7 @@ const Front = () => {
                 {/*            borderRadius: '50%',*/}
                 {/*            width: '150px',*/}
                 {/*            height: '150px',*/}
-                {/*            background: '#a4a4a4'*/}
+                {/*            background: '#EFF9E9'*/}
                 {/*          }}*/}
                 {/*        ></Box>*/}
                 {/*      )}*/}
