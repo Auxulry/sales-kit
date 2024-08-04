@@ -34,6 +34,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Manajemen Iklan" />
     </ListItemButton>
+    <ListItemButton href='/internal/products'>
+      <ListItemIcon>
+        <AdsClick />
+      </ListItemIcon>
+      <ListItemText primary="Manajemen Produk" />
+    </ListItemButton>
     <ListItemButton href='/internal/customer'>
       <ListItemIcon>
         <PeopleIcon />

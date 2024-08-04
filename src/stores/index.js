@@ -11,6 +11,7 @@ import createDomainSlice from "@/stores/internal/domain";
 import createAdsSlice from "@/stores/internal/ads";
 import createSummarySlice from "@/stores/internal/summary";
 import createAdminSlice from "@/stores/internal/admin";
+import createInternalProductSlice from "@/stores/internal/product";
 
 const useStore = create(
   devtools(
@@ -24,7 +25,8 @@ const useStore = create(
         domain: lens(createDomainSlice),
         ads: lens(createAdsSlice),
         summary: lens(createSummarySlice),
-        admin: lens(createAdminSlice)
+        admin: lens(createAdminSlice),
+        productInternal: lens(createInternalProductSlice)
       })
     )
   )

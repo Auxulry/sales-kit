@@ -10,6 +10,7 @@ export const initialState = {
     socialMedia: [],
     ads: []
   },
+  products: [],
   error: false,
   errorMessage: '',
   isNotFound: false
@@ -85,7 +86,43 @@ const createGuestSlice = (set) => ({
 
       throw err
     }
-  }
+  },
+  getProducts: async () => {
+    set(produce((state) => {
+      state.isLoading = true;
+    }));
+
+    try {
+      const response = await get(`products`);
+
+      const data = response.data;
+
+      set(produce((state) => {
+        state.isLoading = false;
+        state.error = false;
+        state.isNotFound = false;
+        state.errorMessage = ''
+        state.products = data?.data;
+      }));
+
+    } catch (err) {
+      if (err?.data?.code === 404) {
+        set(produce((state) => {
+          state.isLoading = false;
+          state.error = true;
+          state.isNotFound = true;
+          state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
+        }));
+      } else {
+        set(produce((state) => {
+          state.isLoading = false;
+          state.error = true;
+          state.errorMessage = err?.data?.message || 'An error occurred while fetching data';
+        }));
+      }
+      throw err
+    }
+  },
 })
 
 export default createGuestSlice;

@@ -25,6 +25,7 @@ import Joi from 'joi';
 import AutoPlayAudio from "@/components/atomics/AutoPlayAudio";
 import {Product} from "@/app/team/[name]/dataObj";
 import GreetingDialog from "@/components/molecules/sales/GreetingDialog";
+import Gallery from "@/components/atomics/Gallery";
 
 const SocialComponents = ({ type, link }) => {
   const handleClick = (link) => {
@@ -50,7 +51,7 @@ const Front = () => {
   const param = useParams();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTab = useMediaQuery(theme.breakpoints.down('md'));
-  const { error, isNotFound, errorMessage, getSalesInfo, salesInfo, addGuestToCustomer } = useZustandStore().guest;
+  const { error, isNotFound, errorMessage, getSalesInfo, salesInfo, addGuestToCustomer, getProducts, products } = useZustandStore().guest;
   const [salesFound, setSalesFound] = useState({
     isFound: false,
     message: ''
@@ -63,13 +64,18 @@ const Front = () => {
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState('success');
-  const [product, setProduct] = useState(11);
+  const [product, setProduct] = useState('');
   const [productType, setProductType] = useState([])
   const [productCategory, setProductCategory] = useState({
-    type: 1,
-    category: 1
+    type: '',
+    category: ''
   })
-  const [selectedProperty, setSelectedProperty] = useState("30/60")
+
+  const [selectedProperty, setSelectedProperty] = useState({
+    name: "",
+    route: "",
+    galleries: []
+  })
   const [openGreeting, setOpenGreeting] = useState(true)
   const [openForm, setOpenForm] = useState(false);
   const searchParams = useSearchParams()
@@ -83,10 +89,11 @@ const Front = () => {
   }, []);
 
   useEffect(() => {
-    setProductType(Product.filter((item) => item.name === product).length > 0
-      ? Product.filter((item) => item.name === product)[0].types
+    setProductType(products.filter((item) => item.name === product).length > 0
+      ? products.filter((item) => item.name === product)[0].types
       : [])
   }, [product]);
+
 
   useLayoutEffect(() => {
     if (openGreeting) {
@@ -104,6 +111,7 @@ const Front = () => {
 
   useEffect(() => {
     getSalesInfo(decodeURIComponent(param?.name));
+    getProducts()
   }, [getSalesInfo, param?.name]);
 
   useEffect(() => {
@@ -202,11 +210,18 @@ const Front = () => {
     setOpen(false);
   };
 
-  const handleRouteChange = () => {
-    window.open(
-      'https://www.google.com/maps?rlz=1C5CHFA_enID1016ID1016&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGDsyCAgCEEUYJxg7MgYIAxBFGDsyBggEEEUYOTIGCAUQRRg8MgYIBhBFGD0yBggHEEUYPdIBCDEyODlqMGo3qAIAsAIA&um=1&ie=UTF-8&fb=1&gl=id&sa=X&geocode=KVEz6UpHk2kuMelOrUGrykTS&daddr=Jl.+Raya+Cileungsi+-+Jonggol,+Gandoang,+Kec.+Cileungsi,+Kabupaten+Bogor,+Jawa+Barat',
-      '_blank'
-    )
+  const handleRouteChange = (route) => {
+    if (route) {
+      window.open(
+        route,
+        '_blank'
+      )
+    } else{
+      window.open(
+        'https://www.google.com',
+        '_blank'
+      )
+    }
   }
 
   const chatToWhatsapp = (phone) => {
@@ -363,7 +378,7 @@ const Front = () => {
                           gap: .5
                         }}
                       >
-                        {Product.map((item) => (
+                        {products.map((item) => (
                           <Box
                             component='div'
                             sx={{
@@ -385,9 +400,11 @@ const Front = () => {
                         ))}
                       </Box>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant='h5'>{`Persona Kahuripan ${product}`}</Typography>
-                    </Grid>
+                    {product !== "" && (
+                      <Grid item xs={12}>
+                        <Typography variant='h5'>{`Persona Kahuripan ${product}`}</Typography>
+                      </Grid>
+                    )}
                   </Grid>
                   <Grid container spacing={3} sx={{ mb: 3 }}>
                     {productType.length > 0 && productType.map((item) => (
@@ -427,7 +444,11 @@ const Front = () => {
                                   type: item.id,
                                   category: e.id
                                 })
-                                setSelectedProperty(e.name)
+                                setSelectedProperty({
+                                  name: e?.name,
+                                  route: e?.route,
+                                  galleries: e?.galleries
+                                })
                               }}
                             >{e.name}</Box>
                           </Grid>
@@ -435,10 +456,10 @@ const Front = () => {
                       </>
                     ))}
                   </Grid>
-                  {product === 11 && (
+                  {selectedProperty?.name !== "" && (
                     <Grid container spacing={3}>
-                      <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <Typography variant='h5' sx={{ mb: 3 }}>Tipe {selectedProperty}</Typography>
+                      <Grid item xs={12}>
+                        <Typography variant='h5' sx={{ mb: 3 }}>Tipe {selectedProperty?.name}</Typography>
                         <Swiper
                           autoplay={{
                             delay: 2500,
@@ -447,163 +468,103 @@ const Front = () => {
                           modules={[Autoplay]}
                           loop
                         >
-                          <SwiperSlide>
-                            <div style={{ width: '100%', height: '360px', position: 'relative' }}>
-                              <Image
-                                src="/images/3060-1.png"
-                                alt="Placeholder Image 1"
-                                fill
-                                priority
-                                style={{ objectFit: 'cover' }}
-                              />
-                              <Box
-                                component='div'
-                                sx={{
-                                  borderRadius: '15px',
-                                  background: '#66B030',
-                                  color: '#fff',
-                                  position: 'absolute',
-                                  bottom: '5%',
-                                  right: '3%',
-                                  padding: '.5rem 1rem',
-                                  cursor: 'pointer',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 1.5
-                                }}
-                                onClick={handleRouteChange}
-                              >
-                                <Navigation />
-                                <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
-                              </Box>
-                            </div>
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <div style={{ width: '100%', height: '360px', position: 'relative' }}>
-                              <Image
-                                src="/images/3060-2.png"
-                                alt="Placeholder Image 2"
-                                fill
-                                priority
-                                style={{ objectFit: 'cover' }}
-                              />
-                              <Box
-                                component='div'
-                                sx={{
-                                  borderRadius: '15px',
-                                  background: '#66B030',
-                                  color: '#fff',
-                                  position: 'absolute',
-                                  bottom: '5%',
-                                  right: '3%',
-                                  padding: '.5rem 1rem',
-                                  cursor: 'pointer',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 1.5
-                                }}
-                                onClick={handleRouteChange}
-                              >
-                                <Navigation />
-                                <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
-                              </Box>
-                            </div>
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <div style={{ width: '100%', height: '360px', position: 'relative' }}>
-                              <Image
-                                src="/images/3060-3.png"
-                                alt="Placeholder Image 3"
-                                fill
-                                priority
-                                style={{ objectFit: 'cover' }}
-                              />
-                            </div>
-                            <Box
-                              component='div'
-                              sx={{
-                                borderRadius: '15px',
-                                background: '#66B030',
-                                color: '#fff',
-                                position: 'absolute',
-                                bottom: '5%',
-                                right: '3%',
-                                padding: '.5rem 1rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1.5
-                              }}
-                              onClick={handleRouteChange}
-                            >
-                              <Navigation />
-                              <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
-                            </Box>
-                          </SwiperSlide>
+                          {selectedProperty?.galleries.map((item) => (
+                            <SwiperSlide key={item?.id}>
+                              <div style={{ width: '100%', height: '360px', position: 'relative' }}>
+                                <Image
+                                  src={item?.image}
+                                  alt="Placeholder Image 1"
+                                  fill
+                                  priority
+                                  style={{ objectFit: 'cover' }}
+                                />
+                                <Box
+                                  component='div'
+                                  sx={{
+                                    borderRadius: '15px',
+                                    background: '#66B030',
+                                    color: '#fff',
+                                    position: 'absolute',
+                                    bottom: '5%',
+                                    right: '3%',
+                                    padding: '.5rem 1rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1.5
+                                  }}
+                                  onClick={() => handleRouteChange(selectedProperty?.route)}
+                                >
+                                  <Navigation />
+                                  <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
+                                </Box>
+                              </div>
+                            </SwiperSlide>
+                          ))}
                         </Swiper>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <Box component='div' sx={{ display: 'flex', flexDirection: 'column', px: 3 }}>
-                          <Typography variant='h6' sx={{ mb: 2 }}>Rumah Tipe Subsidi - Double Dinding</Typography>
-                          <table border='0'>
-                            <tbody>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Harga KPR</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>: Rp. 185.000.000,00</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1'>Luas Tanah</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1'>: 60 m2</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1'>Luas Bangunan</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1'>: 30 m2</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan={2}>
-                                <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Cicilan</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1'>20 Tahun</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1'>: Rp. 1.192.574,00 /bln</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1'>15 Tahun</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1'>: Rp. 1.427.023,00 /bln</Typography>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Typography variant='subtitle1'>10 Tahun</Typography>
-                              </td>
-                              <td>
-                                <Typography variant='subtitle1'>: Rp. 1.910.587,00 /bln</Typography>
-                              </td>
-                            </tr>
-                            </tbody>
-                          </table>
-                        </Box>
-                      </Grid>
+                      {/*<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>*/}
+                      {/*  <Box component='div' sx={{ display: 'flex', flexDirection: 'column', px: 3 }}>*/}
+                      {/*    <Typography variant='h6' sx={{ mb: 2 }}>Rumah Tipe Subsidi - Double Dinding</Typography>*/}
+                      {/*    <table border='0'>*/}
+                      {/*      <tbody>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Harga KPR</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>: Rp. 185.000.000,00</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>Luas Tanah</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>: 60 m2</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>Luas Bangunan</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>: 30 m2</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td colSpan={2}>*/}
+                      {/*          <Typography variant='subtitle1' sx={{fontWeight: 'bold'}}>Cicilan</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>20 Tahun</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>: Rp. 1.192.574,00 /bln</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>15 Tahun</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>: Rp. 1.427.023,00 /bln</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      <tr>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>10 Tahun</Typography>*/}
+                      {/*        </td>*/}
+                      {/*        <td>*/}
+                      {/*          <Typography variant='subtitle1'>: Rp. 1.910.587,00 /bln</Typography>*/}
+                      {/*        </td>*/}
+                      {/*      </tr>*/}
+                      {/*      </tbody>*/}
+                      {/*    </table>*/}
+                      {/*  </Box>*/}
+                      {/*</Grid>*/}
                     </Grid>
                   )}
                   {product !== 11 && (
@@ -821,17 +782,123 @@ const Front = () => {
                     </Box>
                   </Grid>
                 </Grid>
+                <Grid container sx={{ mt: 5, mb: 8 }}>
+                  <Grid item xs={12}>
+                    <Swiper
+                      autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: false,
+                      }}
+                      modules={[Autoplay]}
+                      loop
+                    >
+                      <SwiperSlide>
+                        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '360px'}}>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-1.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-2.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-3.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '360px'}}>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-4.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-5.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-6.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '360px'}}>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-7.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-8.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                          <div style={{width: '33.33%', position: 'relative', height: '100%'}}>
+                            <Image
+                              src={'/images/galleries/Gallery-9.jpg'}
+                              alt={`Gallery Image`}
+                              fill
+                              priority
+                              style={{objectFit: 'cover'}}
+                            />
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                    </Swiper>
+                  </Grid>
+                </Grid>
                 <Fab
-                  color="primary"
-                  aria-label="add"
-                  sx={{
-                    position: 'fixed',
-                    bottom: 30,
-                    right: 16,
-                    zIndex: 2,
-                    backgroundColor: '#242926'
-                  }}
-                  onClick={() => chatToWhatsapp(salesInfo?.phone)}
+                    color="primary"
+                    aria-label="add"
+                    sx={{
+                      position: 'fixed',
+                      bottom: 30,
+                      right: 16,
+                      zIndex: 2,
+                      backgroundColor: '#242926'
+                    }}
+                    onClick={() => chatToWhatsapp(salesInfo?.phone)}
                 >
                   <WhatsApp />
                 </Fab>
