@@ -66,7 +66,7 @@ function EnhancedTable() {
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [search, setSearch] = useState('');
 
-  const { getProducts, createProduct, updateDomain, deleteDomain, items, totalItems, error, errorMessage } = useZustandStore().productInternal;
+  const { getProducts, createProduct, updateDomain, deleteProduct, items, totalItems, error, errorMessage } = useZustandStore().productInternal;
 
   const { isAuthenticated } = useZustandStore().admin;
   const router = useRouter();
@@ -112,7 +112,7 @@ function EnhancedTable() {
     if (editData === null) {
       const payload = new FormData();
       payload.append('branch', formData?.branch);
-      payload.append('isCommercial', formData?.isCommercial);
+      payload.append('isCommercial', formData?.isCommercial ? 1 : 0);
       payload.append('name', formData?.name);
       payload.append('routes', formData?.routes);
 
@@ -142,7 +142,7 @@ function EnhancedTable() {
 
   const handleDelete = async () => {
     if (deleteItemId) {
-      await deleteDomain(deleteItemId);
+      await deleteProduct(deleteItemId);
       setMessage("Team Member Deleted Successfully");
       setSeverity("success");
       setOpenSnackbar(true);

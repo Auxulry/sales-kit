@@ -95,13 +95,13 @@ const createInternalProductSlice = (set) => ({
       throw err
     }
   },
-  deleteDomain: async (id) => {
+  deleteProduct: async (id) => {
     set(produce((state) => {
       state.isLoading = true;
     }));
 
     try {
-      await del(`admin/domains/${id}`, {},  setHeaderSession(true))
+      await del(`admin/products/${id}`, {},  setHeaderSession(true))
 
       set(produce((state) => {
         state.isLoading = false;

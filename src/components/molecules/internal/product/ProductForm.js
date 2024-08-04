@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import Joi from 'joi';
-import {useTheme} from "@mui/material/styles"; // Import Joi for validation
+import {useTheme} from "@mui/material/styles";
+import Autocomplete from "@mui/material/Autocomplete"; // Import Joi for validation
 
 const ProductForm = ({ open, handleClose, handleSave, initialData }) => {
   const theme = useTheme();
@@ -98,21 +99,50 @@ const ProductForm = ({ open, handleClose, handleSave, initialData }) => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mb: 3, p: 2 }}>
           <Grid item xs={12}>
-            <FormControl fullWidth>
-              <InputLabel>Branch</InputLabel>
-              <Select
-                name="Cabang"
-                value={formState.branch}
-                onChange={handleChange}
-                error={Boolean(errors.branch)}
-              >
-                <MenuItem value={'8'}>Pesona Kahuripan 8</MenuItem>
-                <MenuItem value={'9'}>Pesona Kahuripan 9</MenuItem>
-                <MenuItem value={'10'}>Pesona Kahuripan 10</MenuItem>
-                <MenuItem value={'11'}>Pesona Kahuripan 11</MenuItem>
-              </Select>
-              {errors.branch && <Typography color="error">{errors.branch}</Typography>}
-            </FormControl>
+            <Autocomplete
+              fullWidth
+              options={[
+                {
+                  id: '8',
+                  name: 'Pesona Kahuripan 8'
+                },
+                {
+                  id: '9',
+                  name: 'Pesona Kahuripan 9'
+                },
+                {
+                  id: '10',
+                  name: 'Pesona Kahuripan 10'
+                },
+                {
+                  id: '11',
+                  name: 'Pesona Kahuripan 11'
+                }
+              ]}
+              getOptionLabel={(option) => option.name}
+              value={[
+                {
+                  id: '8',
+                  name: 'Pesona Kahuripan 8'
+                },
+                {
+                  id: '9',
+                  name: 'Pesona Kahuripan 9'
+                },
+                {
+                  id: '10',
+                  name: 'Pesona Kahuripan 10'
+                },
+                {
+                  id: '11',
+                  name: 'Pesona Kahuripan 11'
+                }
+              ].find(option => option.id === formState.branch) || null}
+              onChange={(event, newValue) => {
+                setFormState({ ...formState, branch: newValue ? newValue.id : null });
+              }}
+              renderInput={(params) => <TextField {...params} label="Branch" />}
+            />
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
