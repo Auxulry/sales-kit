@@ -64,7 +64,7 @@ const Front = () => {
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState('success');
-  const [product, setProduct] = useState('');
+  const [product, setProduct] = useState(10);
   const [productType, setProductType] = useState([])
   const [productCategory, setProductCategory] = useState({
     type: '',
@@ -89,10 +89,25 @@ const Front = () => {
   }, []);
 
   useEffect(() => {
-    setProductType(products.filter((item) => item.name === product).length > 0
-      ? products.filter((item) => item.name === product)[0].types
+    const data = products.filter((item) => item.name === product)
+    setProductType(data.length > 0
+      ? data[0].types
       : [])
-  }, [product]);
+  }, [product, products]);
+
+  useEffect(() => {
+    if (productType.length > 0 && productCategory?.category === "") {
+      setProductCategory({
+        type: productType[0]?.id,
+        category: productType[0]?.categories[0]?.id
+      })
+      setSelectedProperty({
+        name: productType[0]?.categories[0]?.name,
+        route: productType[0]?.categories[0]?.route,
+        galleries: productType[0]?.categories[0]?.galleries
+      })
+    }
+  }, [productType, productCategory]);
 
 
   useLayoutEffect(() => {
@@ -111,8 +126,12 @@ const Front = () => {
 
   useEffect(() => {
     getSalesInfo(decodeURIComponent(param?.name));
-    getProducts()
   }, [getSalesInfo, param?.name]);
+
+  useEffect(() => {
+    getProducts()
+  }, []);
+
 
   useEffect(() => {
     if (error) {
@@ -478,26 +497,26 @@ const Front = () => {
                                   priority
                                   style={{ objectFit: 'cover' }}
                                 />
-                                <Box
-                                  component='div'
-                                  sx={{
-                                    borderRadius: '15px',
-                                    background: '#66B030',
-                                    color: '#fff',
-                                    position: 'absolute',
-                                    bottom: '5%',
-                                    right: '3%',
-                                    padding: '.5rem 1rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1.5
-                                  }}
-                                  onClick={() => handleRouteChange(selectedProperty?.route)}
-                                >
-                                  <Navigation />
-                                  <Typography variant='subtitle1'>Route Ke Lokasi</Typography>
-                                </Box>
+                                {/*<Box*/}
+                                {/*  component='div'*/}
+                                {/*  sx={{*/}
+                                {/*    borderRadius: '15px',*/}
+                                {/*    background: '#66B030',*/}
+                                {/*    color: '#fff',*/}
+                                {/*    position: 'absolute',*/}
+                                {/*    bottom: '5%',*/}
+                                {/*    right: '3%',*/}
+                                {/*    padding: '.5rem 1rem',*/}
+                                {/*    cursor: 'pointer',*/}
+                                {/*    display: 'flex',*/}
+                                {/*    alignItems: 'center',*/}
+                                {/*    gap: 1.5*/}
+                                {/*  }}*/}
+                                {/*  onClick={() => handleRouteChange(selectedProperty?.route)}*/}
+                                {/*>*/}
+                                {/*  <Navigation />*/}
+                                {/*  <Typography variant='subtitle1'>Route Ke Lokasi</Typography>*/}
+                                {/*</Box>*/}
                               </div>
                             </SwiperSlide>
                           ))}
@@ -567,7 +586,7 @@ const Front = () => {
                       {/*</Grid>*/}
                     </Grid>
                   )}
-                  {product !== 11 && (
+                  {product !== 10 && (
                     <Typography variant='h4' sx={{ textAlign: 'center' }}>Coming Soon</Typography>
                   )}
                 </Box>
